@@ -212,8 +212,10 @@ board_property boardProperties[] = {
  */
 //sorted on column basis
 static const camera_size_type picture_sizes[] = {
-//    { 2592, 1944 }, // 5MP
-//    { 2560, 1920 }, // 5MP (slightly reduced)
+#ifdef BOARD_CAMERA_5MP
+    { 2592, 1944 }, // 5MP
+    { 2560, 1920 }, // 5MP (slightly reduced)
+#endif
     { 2048, 1536 }, // 3MP QXGA
     { 1920, 1080 }, //HD1080
     { 1600, 1200 }, // 2MP UXGA
@@ -1038,7 +1040,7 @@ void QualcommCameraHardware::initDefaultParameters()
     mParameters.setPictureSize(DEFAULT_PICTURE_WIDTH, DEFAULT_PICTURE_HEIGHT);
     mParameters.setPictureFormat("jpeg"); // informative
 
-    mParameters.set(CameraParameters::KEY_JPEG_QUALITY, "85"); // max quality
+    mParameters.set(CameraParameters::KEY_JPEG_QUALITY, "100"); // max quality
     mParameters.set(CameraParameters::KEY_JPEG_THUMBNAIL_WIDTH,
                     THUMBNAIL_WIDTH_STR); // informative
     mParameters.set(CameraParameters::KEY_JPEG_THUMBNAIL_HEIGHT,
