@@ -127,5 +127,4 @@ PRODUCT_LOCALES += en
 
 # Build.prop overrides
 PRODUCT_PROPERTY_OVERRIDES += \
-    hwui.render_dirty_regions=false \
     pm.sleep_mode=1
