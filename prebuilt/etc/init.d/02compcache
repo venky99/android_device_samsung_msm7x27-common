@@ -16,4 +16,3 @@ if [ "$COMPCACHE" -ne "0" ]; then
 	mkswap /dev/block/zram0
 	swapon /dev/block/zram0
 fi
-

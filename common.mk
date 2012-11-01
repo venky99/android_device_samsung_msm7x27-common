@@ -12,6 +12,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+## GPS configuration
+$(call inherit-product, device/common/gps/gps_eu_supl.mk)
+
 ## Media
 PRODUCT_PACKAGES += \
     libOmxCore \
@@ -32,11 +35,6 @@ PRODUCT_PACKAGES += \
     audio.a2dp.default \
     libaudioutils
 
-## Camera
-PRODUCT_PACKAGES += \
-    libcamera \
-    LegacyCamera 
-
 ## GPS
 PRODUCT_PACKAGES += \
     librpc 
@@ -47,39 +45,46 @@ PRODUCT_PACKAGES += \
     brcm_patchram_plus \
     bdaddr_read \
     setup_fs \
-    FileManager  
+    FileManager
+
+## Wifi
+PRODUCT_PACKAGES += \
+    wmiconfig \
+    wlan_tool
 
 ## Vold config
 PRODUCT_COPY_FILES += \
     device/samsung/msm7x27-common/prebuilt/etc/vold.fstab:system/etc/vold.fstab
 
+# BT config
+PRODUCT_COPY_FILES += \
+    system/bluetooth/data/main.conf:system/etc/bluetooth/main.conf
+
 ## Hardware properties 
 PRODUCT_COPY_FILES += \
-    frameworks/native/data/etc/android.hardware.camera.xml:system/etc/permissions/android.hardware.camera.xml \
-    frameworks/native/data/etc/android.hardware.location.gps.xml:system/etc/permissions/android.hardware.location.gps.xml \
-    frameworks/native/data/etc/android.hardware.location.xml:system/etc/permissions/android.hardware.location.xml \
-    frameworks/native/data/etc/android.hardware.sensor.accelerometer.xml:system/etc/permissions/android.hardware.sensor.accelerometer.xml \
-    frameworks/native/data/etc/android.hardware.sensor.compass.xml:system/etc/permissions/android.hardware.sensor.compass.xml \
-    frameworks/native/data/etc/android.hardware.sensor.light.xml:system/etc/permissions/android.hardware.sensor.light.xml \
-    frameworks/native/data/etc/android.hardware.sensor.proximity.xml:system/etc/permissions/android.hardware.sensor.proximity.xml \
-    frameworks/native/data/etc/android.hardware.telephony.gsm.xml:system/etc/permissions/android.hardware.telephony.gsm.xml \
-    frameworks/native/data/etc/android.hardware.touchscreen.multitouch.xml:system/etc/permissions/android.hardware.touchscreen.multitouch.xml \
-    frameworks/native/data/etc/android.hardware.wifi.xml:system/etc/permissions/android.hardware.wifi.xml \
-    frameworks/native/data/etc/android.hardware.wifi.direct.xml:system/etc/permissions/android.hardware.wifi.direct.xml \
+    frameworks/base/data/etc/android.hardware.camera.xml:system/etc/permissions/android.hardware.camera.xml \
+    frameworks/base/data/etc/android.hardware.location.gps.xml:system/etc/permissions/android.hardware.location.gps.xml \
+    frameworks/base/data/etc/android.hardware.location.xml:system/etc/permissions/android.hardware.location.xml \
+    frameworks/base/data/etc/android.hardware.sensor.accelerometer.xml:system/etc/permissions/android.hardware.sensor.accelerometer.xml \
+    frameworks/base/data/etc/android.hardware.sensor.compass.xml:system/etc/permissions/android.hardware.sensor.compass.xml \
+    frameworks/base/data/etc/android.hardware.sensor.light.xml:system/etc/permissions/android.hardware.sensor.light.xml \
+    frameworks/base/data/etc/android.hardware.sensor.proximity.xml:system/etc/permissions/android.hardware.sensor.proximity.xml \
+    frameworks/base/data/etc/android.hardware.telephony.gsm.xml:system/etc/permissions/android.hardware.telephony.gsm.xml \
+    frameworks/base/data/etc/android.hardware.touchscreen.multitouch.xml:system/etc/permissions/android.hardware.touchscreen.multitouch.xml \
+    frameworks/base/data/etc/android.hardware.wifi.xml:system/etc/permissions/android.hardware.wifi.xml \
+    frameworks/base/data/etc/android.hardware.wifi.direct.xml:system/etc/permissions/android.hardware.wifi.direct.xml \
     frameworks/base/data/etc/platform.xml:system/etc/permissions/platform.xml \
-    frameworks/native/data/etc/android.software.sip.xml:system/etc/permissions/android.software.sip.xml \
-    frameworks/native/data/etc/android.software.sip.voip.xml:system/etc/permissions/android.software.sip.voip.xml \
-    frameworks/native/data/etc/handheld_core_hardware.xml:system/etc/permissions/handheld_core_hardware.xml
+    frameworks/base/data/etc/android.software.sip.xml:system/etc/permissions/android.software.sip.xml \
+    frameworks/base/data/etc/android.software.sip.voip.xml:system/etc/permissions/android.software.sip.voip.xml \
+    frameworks/base/data/etc/handheld_core_hardware.xml:system/etc/permissions/handheld_core_hardware.xml
 
 ## Ramdisk
 PRODUCT_COPY_FILES += \
     device/samsung/msm7x27-common/ramdisk/lib/modules/fsr.ko:root/lib/modules/fsr.ko \
     device/samsung/msm7x27-common/ramdisk/lib/modules/fsr_stl.ko:root/lib/modules/fsr_stl.ko \
-    device/samsung/msm7x27-common/ramdisk/lib/modules/sec_param.ko:root/lib/modules/sec_param.ko
-
-## Prebuilt init.d scripts
-PRODUCT_COPY_FILES += \
-    device/samsung/msm7x27-common/prebuilt/etc/init.d/01bt:system/etc/init.d/01bt  
+    device/samsung/msm7x27-common/ramdisk/lib/modules/sec_param.ko:root/lib/modules/sec_param.ko \
+    device/samsung/msm7x27-common/ramdisk/lib/modules/rfs_fat.ko:root/lib/modules/rfs_fat.ko \
+    device/samsung/msm7x27-common/ramdisk/lib/modules/rfs_glue.ko:root/lib/modules/rfs_glue.ko
 
 ## Wi-Fi & networking
 PRODUCT_COPY_FILES += \
@@ -91,7 +96,6 @@ PRODUCT_COPY_FILES += \
     device/samsung/msm7x27-common/prebuilt/etc/AutoVolumeControl.txt:system/etc/AutoVolumeControl.txt \
     device/samsung/msm7x27-common/prebuilt/etc/AudioFilter.csv:system/etc/AudioFilter.csv \
     device/samsung/msm7x27-common/prebuilt/etc/media_profiles.xml:system/etc/media_profiles.xml \
-    device/samsung/msm7x27-common/prebuilt/etc/media_codecs.xml:system/etc/media_codecs.xml \
     device/samsung/msm7x27-common/prebuilt/etc/audio_policy.conf:system/etc/audio_policy.conf \
 
 ## Keymap
@@ -113,18 +117,15 @@ PRODUCT_COPY_FILES += \
 PRODUCT_COPY_FILES += \
     device/samsung/msm7x27-common/prebuilt/usr/idc/sec_touchscreen.idc:system/usr/idc/sec_touchscreen.idc
 
-## ICS GPS blob
-PRODUCT_COPY_FILES += \
-    device/samsung/msm7x27-common/prebuilt/lib/hw/gps.msm7x27.so:system/lib/hw/gps.msm7x27.so
+## GPS configuration
+#PRODUCT_COPY_FILES += \
+#    device/samsung/msm7x27-common/prebuilt/etc/gps.conf:system/etc/gps.conf
 
-## Custom GPS config
+## Prebuilt init.d scripts
 PRODUCT_COPY_FILES += \
-    device/samsung/msm7x27-common/prebuilt/etc/gps.conf:system/etc/gps.conf \
-    device/samsung/msm7x27-common/prebuilt/etc/secgps.conf:system/etc/secgps.conf
+    device/samsung/msm7x27-common/prebuilt/etc/init.d/01bt:system/etc/init.d/01bt \
+    device/samsung/msm7x27-common/prebuilt/etc/init.d/02compcache:system/etc/init.d/02compcache 
 
-# LDPI assets
+## Other
 PRODUCT_LOCALES += en
-
-# Build.prop overrides
-PRODUCT_PROPERTY_OVERRIDES += \
-    pm.sleep_mode=1
+PRODUCT_AAPT_CONFIG := ldpi mdpi hdpi normal
