@@ -41,11 +41,11 @@ PRODUCT_PACKAGES += \
   
 ## Other
 PRODUCT_PACKAGES += \
+    Stk \
+    CMFileManager \
     make_ext4fs \
     brcm_patchram_plus \
-    bdaddr_read \
     setup_fs \
-    FileManager
 
 ## Wifi
 PRODUCT_PACKAGES += \
@@ -123,7 +123,7 @@ PRODUCT_COPY_FILES += \
 
 ## Prebuilt init.d scripts
 PRODUCT_COPY_FILES += \
-    device/samsung/msm7x27-common/prebuilt/etc/init.d/01bt:system/etc/init.d/01bt \
+    vendor/cm/prebuilt/common/etc/init.local.rc:root/init.local.rc \
     device/samsung/msm7x27-common/prebuilt/etc/init.d/02compcache:system/etc/init.d/02compcache 
 
 ## Other
