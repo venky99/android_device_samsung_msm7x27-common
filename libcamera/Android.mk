@@ -7,7 +7,7 @@ include $(CLEAR_VARS)
 
 LOCAL_CFLAGS        += -O3
 LOCAL_MODULE_PATH := $(TARGET_OUT_SHARED_LIBRARIES)/hw
-LOCAL_MODULE := camera.cooper
+LOCAL_MODULE := camera.$(TARGET_DEVICE)
 
 LOCAL_MODULE_TAGS := optional
 
