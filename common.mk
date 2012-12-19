@@ -182,6 +182,40 @@ PRODUCT_COPY_FILES += \
 PRODUCT_COPY_FILES += \
     device/samsung/msm7x27-common/prebuilt/lib/hw/gps.msm7x27.so:system/lib/hw/gps.msm7x27.so
 
+## Touchwiz
+PRODUCT_COPY_FILES += \
+    device/samsung/msm7x27-common/prebuilt/touchwiz/lib/libdrawglfunction.so:system/lib/libdrawglfunction.so \
+    device/samsung/msm7x27-common/prebuilt/touchwiz/app/BadgeProvider.apk:system/app/BadgeProvider.apk \
+    device/samsung/msm7x27-common/prebuilt/touchwiz/app/SecLauncher2.apk:system/app/SecLauncher2.apk
+
+## gapps
+PRODUCT_COPY_FILES += \
+    device/samsung/msm7x27-common/prebuilt/gapps/app/ChromeBookmarksSyncAdapter.apk:system/app/ChromeBookmarksSyncAdapter.apk \
+    device/samsung/msm7x27-common/prebuilt/gapps/app/GoogleBackupTransport.apk:system/app/GoogleBackupTransport.apk \
+    device/samsung/msm7x27-common/prebuilt/gapps/app/GoogleCalendarSyncAdapter.apk:system/app/GoogleCalendarSyncAdapter.apk \
+    device/samsung/msm7x27-common/prebuilt/gapps/app/GoogleContactsSyncAdapter.apk:system/app/GoogleContactsSyncAdapter.apk \
+    device/samsung/msm7x27-common/prebuilt/gapps/app/GoogleFeedback.apk:system/app/GoogleFeedback.apk \
+    device/samsung/msm7x27-common/prebuilt/gapps/app/GoogleLoginService.apk:system/app/GoogleLoginService.apk \
+    device/samsung/msm7x27-common/prebuilt/gapps/app/GoogleNowVoiceSearch.apk:system/app/GoogleNowVoiceSearch.apk \
+    device/samsung/msm7x27-common/prebuilt/gapps/app/GooglePartnerSetup.apk:system/app/GooglePartnerSetup.apk \
+    device/samsung/msm7x27-common/prebuilt/gapps/app/GoogleServicesFramework.apk:system/app/GoogleServicesFramework.apk \
+    device/samsung/msm7x27-common/prebuilt/gapps/app/MediaUploader.apk:system/app/MediaUploader.apk \
+    device/samsung/msm7x27-common/prebuilt/gapps/app/NetworkLocation.apk:system/app/NetworkLocation.apk \
+    device/samsung/msm7x27-common/prebuilt/gapps/app/OneTimeInitializer.apk:system/app/OneTimeInitializer.apk \
+    device/samsung/msm7x27-common/prebuilt/gapps/app/Phonesky.apk:system/app/Phonesky.apk \
+    device/samsung/msm7x27-common/prebuilt/gapps/app/SetupWizard.apk:system/app/SetupWizard.apk \
+    device/samsung/msm7x27-common/prebuilt/gapps/app/Talk.apk:system/app/Talk.apk \
+    device/samsung/msm7x27-common/prebuilt/gapps/app/VoiceSearch.apk:system/app/VoiceSearch.apk \
+    device/samsung/msm7x27-common/prebuilt/gapps/etc/g.prop:system/etc/g.prop \
+    device/samsung/msm7x27-common/prebuilt/gapps/etc/permissions/com.google.android.maps.xml:system/etc/permissions/com.google.android.maps.xml \
+    device/samsung/msm7x27-common/prebuilt/gapps/etc/permissions/com.google.android.media.effects.xml:system/etc/permissions/com.google.android.media.effects.xml \
+    device/samsung/msm7x27-common/prebuilt/gapps/etc/permissions/com.google.widevine.software.drm.xml:system/etc/permissions/com.google.widevine.software.drm.xml \
+    device/samsung/msm7x27-common/prebuilt/gapps/etc/permissions/features.xml:system/etc/permissions/features.xml \
+    device/samsung/msm7x27-common/prebuilt/gapps/framework/com.google.android.maps.jar:system/framework/com.google.android.maps.jar \
+    device/samsung/msm7x27-common/prebuilt/gapps/framework/com.google.android.media.effects.jar:system/framework/com.google.android.media.effects.jar \
+    device/samsung/msm7x27-common/prebuilt/gapps/framework/com.google.widevine.software.drm.jar:system/framework/com.google.widevine.software.drm.jar \
+    device/samsung/msm7x27-common/prebuilt/gapps/lib/libvoicesearch.so:system/lib/libvoicesearch.so
+
 ## Other
 PRODUCT_LOCALES += en
 PRODUCT_AAPT_CONFIG := ldpi mdpi normal
