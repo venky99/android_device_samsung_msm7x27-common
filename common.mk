@@ -124,8 +124,8 @@ PRODUCT_COPY_FILES += \
 
 ## Prebuilt init.d scripts
 PRODUCT_COPY_FILES += \
-    vendor/cm/prebuilt/common/etc/init.local.rc:root/init.local.rc \
     device/samsung/msm7x27-common/prebuilt/etc/init.d/02compcache:system/etc/init.d/02compcache 
+#    vendor/cm/prebuilt/common/etc/init.local.rc:root/init.local.rc \
 
 ## Other
 PRODUCT_LOCALES += en
