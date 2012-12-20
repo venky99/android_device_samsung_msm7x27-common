@@ -28,7 +28,7 @@
 #else
 	#include <gui/ISurface.h>
 #endif
-#include <ui/Overlay.h>
+//#include <ui/Overlay.h>
 #include <camera/Camera.h>
 #include <camera/CameraParameters.h>
 
