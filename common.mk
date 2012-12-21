@@ -102,11 +102,12 @@ PRODUCT_PACKAGES += \
 ## Camera
 PRODUCT_PACKAGES += \
     camera.gio \
-
+ 
 ## GPS
-PRODUCT_PACKAGES += \
-    librpc 
-  
+#PRODUCT_PACKAGES += \
+#    librpc
+## Somehow it does not compile. Use prebuilt for now
+
 ## Other
 PRODUCT_PACKAGES += \
     make_ext4fs \
@@ -180,7 +181,8 @@ PRODUCT_COPY_FILES += \
 
 ## ICS GPS blob
 PRODUCT_COPY_FILES += \
-    device/samsung/msm7x27-common/prebuilt/lib/hw/gps.msm7x27.so:system/lib/hw/gps.msm7x27.so
+    device/samsung/msm7x27-common/prebuilt/lib/hw/gps.msm7x27.so:system/lib/hw/gps.msm7x27.so \
+    device/samsung/msm7x27-common/prebuilt/lib/librpc.so:system/lib/librpc.so
 
 ## Touchwiz
 PRODUCT_COPY_FILES += \
