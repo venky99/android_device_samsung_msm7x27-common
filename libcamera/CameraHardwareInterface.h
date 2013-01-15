@@ -19,16 +19,8 @@
 
 #include <binder/IMemory.h>
 #include <utils/RefBase.h>
-#ifndef ANDROID_JB
-	#include <surfaceflinger/ISurface.h>
-	#define ALOGI LOGI
-	#define ALOGE LOGE
-	#define ALOGD LOGD
-	#define ALOGV LOGV
-#else
-	#include <gui/ISurface.h>
-#endif
-//#include <ui/Overlay.h>
+#include <surfaceflinger/ISurface.h>
+#include <ui/Overlay.h>
 #include <camera/Camera.h>
 #include <camera/CameraParameters.h>
 
