@@ -1,6 +1,11 @@
 /*
- * Copyright (C) 2008 The Android Open Source Project
- *
+ * Copyright (C) 2012 The Android Open Source Project
+ * Copyright (C) 2012 Zhibin Wu, Simon Davie, Nico Kaiser
+ * Copyright (C) 2012 QiSS ME Project Team
+ * Copyright (C) 2012 Twisted, Sean Neeley
+ * Copyright (C) 2012 GalaxyICS
+ * Copyright (C) 2012 Pavel Kirpichyov aka WaylandACE
+
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -14,234 +19,544 @@
  * limitations under the License.
  */
 
-#ifndef ANDROID_HARDWARE_CAMERA_HARDWARE_INTERFACE_H
-#define ANDROID_HARDWARE_CAMERA_HARDWARE_INTERFACE_H
+#define LOG_TAG "CameraHAL"
 
-#include <binder/IMemory.h>
-#include <utils/RefBase.h>
-#include <surfaceflinger/ISurface.h>
-#include <ui/Overlay.h>
-#include <camera/Camera.h>
+#define GRALLOC_USAGE_PMEM_PRIVATE_ADSP GRALLOC_USAGE_PRIVATE_0
+
 #include <camera/CameraParameters.h>
+#include <hardware/camera.h>
+#include <binder/IMemory.h>
+#include <gralloc_priv.h>
+#include "CameraHardwareInterface.h"
 
-namespace android {
+using android::sp;
+using android::Overlay;
+using android::String8;
+using android::IMemory;
+using android::IMemoryHeap;
+using android::CameraParameters;
 
-    class Overlay;
+using android::CameraInfo;
+using android::HAL_getCameraInfo;
+using android::HAL_getNumberOfCameras;
+using android::HAL_openCameraHardware;
+using android::CameraHardwareInterface;
 
-    /**
-     *  The size of image for display.
-     */
-    typedef struct image_rect_struct
-    {
-        uint32_t width;      /* Image width */
-        uint32_t height;     /* Image height */
-    } image_rect_type;
+static sp<CameraHardwareInterface> qCamera;
 
+static int camera_device_open(const hw_module_t* module, const char* name,
+                              hw_device_t** device);
+static int camera_device_close(hw_device_t* device);
+static int camera_get_number_of_cameras(void);
+static int camera_get_camera_info(int camera_id, struct camera_info *info);
 
-    typedef void (*notify_callback)(int32_t msgType,
-                                    int32_t ext1,
-                                    int32_t ext2,
-                                    void* user);
+static struct hw_module_methods_t camera_module_methods = {
+    open: camera_device_open
+};
 
-    typedef void (*data_callback)(int32_t msgType,
-                                  const sp<IMemory>& dataPtr,
-                                  void* user);
+camera_module_t HAL_MODULE_INFO_SYM = {
+    common: {
+            tag: HARDWARE_MODULE_TAG,
+            version_major: 1,
+            version_minor: 0,
+            id: CAMERA_HARDWARE_MODULE_ID,
+            name: "Camera HAL",
+            author: "Zhibin Wu & Marcin Chojnacki & Pavel Kirpichyov",
+            methods: &camera_module_methods,
+            dso: NULL, /* remove compilation warnings */
+            reserved: {0}, /* remove compilation warnings */
+    },
+    get_number_of_cameras: camera_get_number_of_cameras,
+    get_camera_info: camera_get_camera_info,
+};
 
-    typedef void (*data_callback_timestamp)(nsecs_t timestamp,
-                                            int32_t msgType,
-                                            const sp<IMemory>& dataPtr,
-                                            void* user);
+typedef struct priv_camera_device {
+    camera_device_t base;
+    /* specific "private" data can go here (base.priv) */
+    int cameraid;
+    /* new world */
+    preview_stream_ops *window;
+    camera_notify_callback notify_callback;
+    camera_data_callback data_callback;
+    camera_data_timestamp_callback data_timestamp_callback;
+    camera_request_memory request_memory;
+    void *user;
+    int preview_started;
+    /* old world*/
+    int preview_width;
+    int preview_height;
+    sp<Overlay> overlay;
+    gralloc_module_t const *gralloc;
+} priv_camera_device_t;
 
-    /**
-     * CameraHardwareInterface.h defines the interface to the
-     * camera hardware abstraction layer, used for setting and getting
-     * parameters, live previewing, and taking pictures.
-     *
-     * It is a referenced counted interface with RefBase as its base class.
-     * CameraService calls openCameraHardware() to retrieve a strong pointer to the
-     * instance of this interface and may be called multiple times. The
-     * following steps describe a typical sequence:
-     *
-     *   -# After CameraService calls openCameraHardware(), getParameters() and
-     *      setParameters() are used to initialize the camera instance.
-     *      CameraService calls getPreviewHeap() to establish access to the
-     *      preview heap so it can be registered with SurfaceFlinger for
-     *      efficient display updating while in preview mode.
-     *   -# startPreview() is called.  The camera instance then periodically
-     *      sends the message CAMERA_MSG_PREVIEW_FRAME (if enabled) each time
-     *      a new preview frame is available.  If data callback code needs to use
-     *      this memory after returning, it must copy the data.
-     *
-     * Prior to taking a picture, CameraService calls autofocus(). When auto
-     * focusing has completed, the camera instance sends a CAMERA_MSG_FOCUS notification,
-     * which informs the application whether focusing was successful. The camera instance
-     * only sends this message once and it is up  to the application to call autoFocus()
-     * again if refocusing is desired.
-     *
-     * CameraService calls takePicture() to request the camera instance take a
-     * picture. At this point, if a shutter, postview, raw, and/or compressed callback
-     * is desired, the corresponding message must be enabled. As with CAMERA_MSG_PREVIEW_FRAME,
-     * any memory provided in a data callback must be copied if it's needed after returning.
-     */
+static camera_memory_t *wrap_memory_data(priv_camera_device_t *dev, const sp<IMemory>& dataPtr) {
+    if (!dev->request_memory)
+        return NULL;
 
-    class CameraHardwareInterface : public virtual RefBase {
-    public:
-        virtual ~CameraHardwareInterface() { }
+    size_t size;
+    ssize_t offset;
 
-        /** Return the IMemoryHeap for the preview image heap */
-        virtual sp<IMemoryHeap>         getPreviewHeap() const = 0;
+    sp<IMemoryHeap> heap = dataPtr->getMemory(&offset, &size);
+    void *data = (void *)((char *)(heap->base()) + offset);
 
-        /** Return the IMemoryHeap for the raw image heap */
-        virtual sp<IMemoryHeap>         getRawHeap() const = 0;
+    camera_memory_t *mem = dev->request_memory(-1, size, 1, dev->user);
 
-        /** Set the notification and data callbacks */
-        virtual void setCallbacks(notify_callback notify_cb,
-                                  data_callback data_cb,
-                                  data_callback_timestamp data_cb_timestamp,
-                                  void* user) = 0;
+    memcpy(mem->data, data, size);
 
-        /**
-         * The following three functions all take a msgtype,
-         * which is a bitmask of the messages defined in
-         * include/ui/Camera.h
-         */
+    return mem;
+}
 
-        /**
-         * Enable a message, or set of messages.
-         */
-        virtual void        enableMsgType(int32_t msgType) = 0;
+static void wrap_notify_callback(int32_t msg_type, int32_t ext1, int32_t ext2, void* user) {
+    if(!user)
+        return;
 
-        /**
-         * Disable a message, or a set of messages.
-         */
-        virtual void        disableMsgType(int32_t msgType) = 0;
+    priv_camera_device_t* dev = (priv_camera_device_t*) user;
 
-        /**
-         * Query whether a message, or a set of messages, is enabled.
-         * Note that this is operates as an AND, if any of the messages
-         * queried are off, this will return false.
-         */
-        virtual bool        msgTypeEnabled(int32_t msgType) = 0;
+    if (dev->notify_callback)
+        dev->notify_callback(msg_type, ext1, ext2, dev->user);
+}
 
-        /**
-         * Start preview mode.
-         */
-        virtual status_t    startPreview() = 0;
+void CameraHAL_HandlePreviewData(priv_camera_device_t* dev, const sp<IMemory>& dataPtr) {
+    preview_stream_ops_t *mWindow = dev->window;
+    if(mWindow == NULL) return;
 
-        /**
-         * Query the recording buffer information from HAL.
-         * This is needed because the opencore expects the buffer
-         * information before starting the recording.
-         */
-        virtual status_t    getBufferInfo(sp<IMemory>& Frame, size_t *alignedSize) = 0;
+    size_t size;
+    ssize_t offset;
 
-        /**
-         * Encode the YUV data.
-         */
-        virtual void        encodeData() = 0;
+    sp<IMemoryHeap> heap = dataPtr->getMemory(&offset, &size);
+    if(heap == 0) {
+        LOGE("%s: heap allocation failed", __FUNCTION__);
+        return;
+    }
 
-        /**
-         * Only used if overlays are used for camera preview.
-         */
-        virtual bool         useOverlay() {return false;}
-        virtual status_t     setOverlay(const sp<Overlay> &overlay) {return BAD_VALUE;}
+    char *frame = (char *)(heap->base()) + offset;
 
-        /**
-         * Stop a previously started preview.
-         */
-        virtual void        stopPreview() = 0;
+    LOGV("%s: base:%p offset:%i frame:%p", __FUNCTION__, heap->base(), offset, frame);
 
-        /**
-         * Returns true if preview is enabled.
-         */
-        virtual bool        previewEnabled() = 0;
+    int stride;
+    void *vaddr;
+    buffer_handle_t *buf_handle;
 
-        /**
-         * Start record mode. When a record image is available a CAMERA_MSG_VIDEO_FRAME
-         * message is sent with the corresponding frame. Every record frame must be released
-         * by calling releaseRecordingFrame().
-         */
-        virtual status_t    startRecording() = 0;
+    if (0 != mWindow->dequeue_buffer(mWindow, &buf_handle, &stride)) {
+        LOGE("%s: could not dequeue gralloc buffer", __FUNCTION__);
+        goto skipframe;
+    }
+    if (dev->gralloc == NULL) {
+        goto skipframe;
+    }
+    if (0 == dev->gralloc->lock(dev->gralloc, *buf_handle,
+                                GRALLOC_USAGE_SW_WRITE_MASK,
+                                0, 0, dev->preview_width, dev->preview_height, &vaddr)) {
+        memcpy(vaddr, frame, dev->preview_width * dev->preview_height * 3 / 2);
+        LOGV("%s: copy frame to gralloc buffer", __FUNCTION__);
+    } else {
+        LOGE("%s: could not lock gralloc buffer", __FUNCTION__);
+        goto skipframe;
+    }
 
-        /**
-         * Stop a previously started recording.
-         */
-        virtual void        stopRecording() = 0;
+    dev->gralloc->unlock(dev->gralloc, *buf_handle);
 
-        /**
-         * Returns true if recording is enabled.
-         */
-        virtual bool        recordingEnabled() = 0;
+    if (0 != mWindow->enqueue_buffer(mWindow, buf_handle)) {
+        LOGE("%s: could not dequeue gralloc buffer", __FUNCTION__);
+        goto skipframe;
+    }
 
-        /**
-         * Release a record frame previously returned by CAMERA_MSG_VIDEO_FRAME.
-         */
-        virtual void        releaseRecordingFrame(const sp<IMemory>& mem) = 0;
+skipframe:
+    LOGV("%s---: ", __FUNCTION__);
 
-        /**
-         * Start auto focus, the notification callback routine is called
-         * with CAMERA_MSG_FOCUS once when focusing is complete. autoFocus()
-         * will be called again if another auto focus is needed.
-         */
-        virtual status_t    autoFocus() = 0;
+    return;
+}
 
-        /**
-         * Cancels auto-focus function. If the auto-focus is still in progress,
-         * this function will cancel it. Whether the auto-focus is in progress
-         * or not, this function will return the focus position to the default.
-         * If the camera does not support auto-focus, this is a no-op.
-         */
-        virtual status_t    cancelAutoFocus() = 0;
+static void wrap_data_callback(int32_t msg_type, const sp<IMemory>& dataPtr, void* user) {
+    if(!user) return;
 
-        /**
-         * Take a picture.
-         */
-        virtual status_t    takePicture() = 0;
+    priv_camera_device_t* dev = (priv_camera_device_t*) user;
+    if (msg_type == CAMERA_MSG_RAW_IMAGE) {
+        qCamera->disableMsgType(CAMERA_MSG_RAW_IMAGE);
+        return;
+    }
 
-        /**
-         * Cancel a picture that was started with takePicture.  Calling this
-         * method when no picture is being taken is a no-op.
-         */
-        virtual status_t    cancelPicture() = 0;
+    if (dataPtr == NULL) {
+        LOGE("%s+++: received null data", __FUNCTION__);
+        return;
+    }
 
-        /**
-         * Set the camera parameters. This returns BAD_VALUE if any parameter is
-         * invalid or not supported. */
-        virtual status_t    setParameters(const CameraParameters& params) = 0;
+    if(msg_type == CAMERA_MSG_PREVIEW_FRAME) {
+        CameraHAL_HandlePreviewData(dev, dataPtr);
+    }
 
-        /** Return the camera parameters. */
-        virtual CameraParameters  getParameters() const = 0;
+    camera_memory_t *data = wrap_memory_data(dev, dataPtr);
 
-        /**
-         * Send command to camera driver.
-         */
-        virtual status_t sendCommand(int32_t cmd, int32_t arg1, int32_t arg2) = 0;
+    if (dev->data_callback)
+        dev->data_callback(msg_type, data, 0, NULL, dev->user);
 
-        /**
-         * Release the hardware resources owned by this object.  Note that this is
-         * *not* done in the destructor.
-         */
-        virtual void release() = 0;
+    if (data != NULL) {
+        data->release(data);
+    }
+}
 
-        /**
-         * Dump state of the camera hardware
-         */
-        virtual status_t dump(int fd, const Vector<String16>& args) const = 0;
+static void wrap_data_callback_timestamp(nsecs_t timestamp, int32_t msg_type, const sp<IMemory>& dataPtr, void* user) {
+    if(!user)
+        return;
 
-        virtual void takeLiveSnapshot() = 0;
-    };
+    priv_camera_device_t* dev = (priv_camera_device_t*) user;
 
-    /**
-     * The functions need to be provided by the camera HAL.
-     *
-     * If getNumberOfCameras() returns N, the valid cameraId for getCameraInfo()
-     * and openCameraHardware() is 0 to N-1.
-     */
-    extern "C" int HAL_getNumberOfCameras();
-    extern "C" void HAL_getCameraInfo(int cameraId, struct CameraInfo* cameraInfo);
-    /* HAL should return NULL if it fails to open camera hardware. */
-    extern "C" sp<CameraHardwareInterface> HAL_openCameraHardware(int cameraId);
+    camera_memory_t *data = wrap_memory_data(dev, dataPtr);
 
-};  // namespace android
+    if (dev->data_timestamp_callback)
+        dev->data_timestamp_callback(timestamp, msg_type, data, 0, dev->user);
 
-#endif
+    qCamera->releaseRecordingFrame(dataPtr);
+
+    if (data != NULL) {
+        data->release(data);
+    }
+}
+
+void CameraHAL_FixupParams(android::CameraParameters &camParams) {
+    const char *video_sizes            = "640x480,384x288,352x288,320x240,240x160,176x144";
+    const char *preferred_size         = "320x240";
+    const char *preview_frame_rates    = "25,24,15";
+
+    camParams.set(CameraParameters::KEY_VIDEO_FRAME_FORMAT, CameraParameters::PIXEL_FORMAT_YUV420SP);
+
+    camParams.set(CameraParameters::KEY_PREFERRED_PREVIEW_SIZE_FOR_VIDEO,  preferred_size);
+
+    camParams.set(CameraParameters::KEY_SUPPORTED_PREVIEW_FRAME_RATES, preview_frame_rates);
+
+    if (!camParams.get(CameraParameters::KEY_SUPPORTED_VIDEO_SIZES)) {
+         camParams.set(CameraParameters::KEY_SUPPORTED_VIDEO_SIZES, video_sizes);
+    }
+
+    if (!camParams.get(CameraParameters::KEY_MAX_NUM_FOCUS_AREAS)) {
+        camParams.set(CameraParameters::KEY_MAX_NUM_FOCUS_AREAS, 1);
+    }
+
+    if (!camParams.get(CameraParameters::KEY_VIDEO_SIZE)) {
+         camParams.set(CameraParameters::KEY_VIDEO_SIZE, preferred_size);
+    }
+    camParams.set("orientation", "landscape");
+}
+
+int camera_set_preview_window(struct camera_device * device, struct preview_stream_ops *window) {
+    int min_bufs     = -1;
+    int kBufferCount = 4;
+
+    LOGV("camera_set_preview_window : Window :%p\n", window);
+    if (device == NULL) {
+        LOGE("camera_set_preview_window : Invalid device.\n");
+        return -EINVAL;
+    }
+    LOGV("camera_set_preview_window : window :%p\n", window);
+
+    priv_camera_device_t* dev = (priv_camera_device_t*) device;
+    dev->window = window;
+    if(window == NULL) {
+        return 0;
+    }
+    if (!dev->gralloc) {
+        if (hw_get_module(GRALLOC_HARDWARE_MODULE_ID, (const hw_module_t **)&(dev->gralloc))) {
+            LOGE("%s: Fail on loading gralloc HAL", __FUNCTION__);
+        }
+    }
+    if (dev->window->get_min_undequeued_buffer_count(dev->window, &min_bufs)) {
+        LOGE("%s---: could not retrieve min undequeued buffer count", __FUNCTION__);
+        return -1;
+    }
+
+    LOGV("%s: bufs: %i", __FUNCTION__, min_bufs);
+
+    if (min_bufs >= kBufferCount) {
+        LOGE("%s: min undequeued buffer count %i is too high (expecting at most %i)", __FUNCTION__, min_bufs, kBufferCount - 1);
+    }
+
+    LOGV("%s: setting buffer count to %i", __FUNCTION__, kBufferCount);
+    if (dev->window->set_buffer_count(dev->window, kBufferCount)) {
+        LOGE("%s---: could not set buffer count", __FUNCTION__);
+        return -1;
+    }
+
+    CameraParameters params = qCamera->getParameters();
+    params.getPreviewSize(&dev->preview_width, &dev->preview_height);
+
+    const char *str_preview_format = params.getPreviewFormat();
+
+    LOGV("%s: preview format %s", __FUNCTION__, str_preview_format);
+
+    dev->window->set_usage(dev->window, GRALLOC_USAGE_PMEM_PRIVATE_ADSP | GRALLOC_USAGE_SW_READ_OFTEN);
+
+    if (dev->window->set_buffers_geometry(dev->window, dev->preview_width,
+                                     dev->preview_height, HAL_PIXEL_FORMAT_YCrCb_420_SP)) {
+        LOGE("%s---: could not set buffers geometry to %s", __FUNCTION__, str_preview_format);
+        return -1;
+    }
+    return 0;
+}
+
+void camera_set_callbacks(struct camera_device * device,
+                          camera_notify_callback notify_cb,
+                          camera_data_callback data_cb,
+                          camera_data_timestamp_callback data_cb_timestamp,
+                          camera_request_memory get_memory,
+                          void *user) {
+    LOGV("%s+++, device %p", __FUNCTION__,device);
+
+    if(!device) return;
+
+    priv_camera_device_t* dev    = (priv_camera_device_t*) device;
+
+    dev->notify_callback         = notify_cb;
+    dev->data_callback           = data_cb;
+    dev->data_timestamp_callback = data_cb_timestamp;
+    dev->request_memory          = get_memory;
+    dev->user                    = user;
+
+    qCamera->setCallbacks(wrap_notify_callback, wrap_data_callback, wrap_data_callback_timestamp, (void *)dev);
+}
+
+void camera_enable_msg_type(struct camera_device * device, int32_t msg_type) {
+    if (msg_type & CAMERA_MSG_RAW_IMAGE_NOTIFY) {
+        msg_type &= ~CAMERA_MSG_RAW_IMAGE_NOTIFY;
+        msg_type |= CAMERA_MSG_RAW_IMAGE;
+    }
+
+    qCamera->enableMsgType(msg_type);
+}
+
+void camera_disable_msg_type(struct camera_device * device, int32_t msg_type) {
+    /* The camera app disables the shutter too early which leads to crash.
+     * Leaving it enabled. */
+    if (msg_type == CAMERA_MSG_SHUTTER) return;
+
+    qCamera->disableMsgType(msg_type);
+}
+
+int camera_msg_type_enabled(struct camera_device * device, int32_t msg_type) {
+    return qCamera->msgTypeEnabled(msg_type);
+}
+
+int camera_start_preview(struct camera_device * device) {
+    if (!qCamera->msgTypeEnabled(CAMERA_MSG_PREVIEW_FRAME)) {
+        qCamera->enableMsgType(CAMERA_MSG_PREVIEW_FRAME);
+    }
+    return qCamera->startPreview();
+}
+
+void camera_stop_preview(struct camera_device * device) {
+    if (qCamera->msgTypeEnabled(CAMERA_MSG_PREVIEW_FRAME)) {
+        qCamera->disableMsgType(CAMERA_MSG_PREVIEW_FRAME);
+    }
+    qCamera->stopPreview();
+}
+
+int camera_preview_enabled(struct camera_device * device) {
+    return qCamera->previewEnabled();
+}
+
+int camera_store_meta_data_in_buffers(struct camera_device * device, int enable) {
+    return 0;
+}
+
+int camera_start_recording(struct camera_device * device) {
+    return qCamera->startRecording();
+}
+
+void camera_stop_recording(struct camera_device * device) {
+    qCamera->stopRecording();
+}
+
+int camera_recording_enabled(struct camera_device * device) {
+    return qCamera->recordingEnabled();
+}
+
+void camera_release_recording_frame(struct camera_device * device, const void *opaque) {
+    //qCamera->releaseRecordingFrame(opaque);
+}
+
+int camera_auto_focus(struct camera_device * device) {
+    return qCamera->autoFocus();
+}
+
+int camera_cancel_auto_focus(struct camera_device * device) {
+    return qCamera->cancelAutoFocus();
+}
+
+int camera_take_picture(struct camera_device * device) {
+    return qCamera->takePicture();
+}
+
+int camera_cancel_picture(struct camera_device * device) {
+    return qCamera->cancelPicture();
+}
+
+int camera_set_parameters(struct camera_device * device, const char *params) {
+    CameraParameters camParams;
+
+    String8 params_str8(params);
+    camParams.unflatten(params_str8);
+
+    return qCamera->setParameters(camParams);
+}
+
+char* camera_get_parameters(struct camera_device * device) {
+    CameraParameters camParams = qCamera->getParameters();
+    CameraHAL_FixupParams(camParams);
+
+    String8 params_str8 = camParams.flatten();
+    char* params = (char*) malloc(sizeof(char) * (params_str8.length()+1));
+    strcpy(params, params_str8.string());
+
+    return params;
+}
+
+static void camera_put_parameters(struct camera_device *device, char *parms) {
+    free(parms);
+}
+
+int camera_send_command(struct camera_device * device, int32_t cmd, int32_t arg1, int32_t arg2) {
+    return qCamera->sendCommand(cmd, arg1, arg2);
+}
+
+void camera_release(struct camera_device * device) {
+    qCamera->release();
+}
+
+int camera_dump(struct camera_device * device, int fd) {
+    android::Vector<android::String16> args;
+    return qCamera->dump(fd, args);
+}
+
+extern "C" void heaptracker_free_leaked_memory(void);
+
+int camera_device_close(hw_device_t* device) {
+    int rc = -EINVAL;
+    priv_camera_device_t* dev = (priv_camera_device_t*) device;
+    if (dev) {
+        qCamera = NULL;
+
+        if (dev->base.ops) {
+            free(dev->base.ops);
+        }
+        free(dev);
+        rc = 0;
+    }
+
+    return rc;
+}
+
+void sighandle(int s) {
+    LOGW("Segfault handled, ignoring");
+}
+
+int camera_device_open(const hw_module_t* module, const char* name, hw_device_t** device) {
+    LOGI("CameraHAL v0.3");
+    int rv = 0;
+    int cameraid;
+    int num_cameras = 0;
+    priv_camera_device_t* priv_camera_device = NULL;
+    camera_device_ops_t* camera_ops = NULL;
+    signal(SIGFPE,(*sighandle));
+
+    if (name != NULL) {
+        cameraid = atoi(name);
+
+        num_cameras = HAL_getNumberOfCameras();
+
+        if(cameraid > num_cameras) {
+            LOGE("camera service provided cameraid out of bounds, cameraid = %d, num supported = %d", cameraid, num_cameras);
+            rv = -EINVAL;
+            goto fail;
+        }
+
+        priv_camera_device = (priv_camera_device_t*)malloc(sizeof(*priv_camera_device));
+        if(!priv_camera_device) {
+            LOGE("camera_device allocation fail");
+            rv = -ENOMEM;
+            goto fail;
+        }
+
+        camera_ops = (camera_device_ops_t*)malloc(sizeof(*camera_ops));
+        if(!camera_ops) {
+            LOGE("camera_ops allocation fail");
+            rv = -ENOMEM;
+            goto fail;
+        }
+
+        memset(priv_camera_device, 0, sizeof(*priv_camera_device));
+        memset(camera_ops, 0, sizeof(*camera_ops));
+
+        priv_camera_device->base.common.tag     = HARDWARE_DEVICE_TAG;
+        priv_camera_device->base.common.version = 0;
+        priv_camera_device->base.common.module  = (hw_module_t *)(module);
+        priv_camera_device->base.common.close   = camera_device_close;
+        priv_camera_device->base.ops            = camera_ops;
+
+        camera_ops->set_preview_window         = camera_set_preview_window;
+        camera_ops->set_callbacks              = camera_set_callbacks;
+        camera_ops->enable_msg_type            = camera_enable_msg_type;
+        camera_ops->disable_msg_type           = camera_disable_msg_type;
+        camera_ops->msg_type_enabled           = camera_msg_type_enabled;
+        camera_ops->start_preview              = camera_start_preview;
+        camera_ops->stop_preview               = camera_stop_preview;
+        camera_ops->preview_enabled            = camera_preview_enabled;
+        camera_ops->store_meta_data_in_buffers = camera_store_meta_data_in_buffers;
+        camera_ops->start_recording            = camera_start_recording;
+        camera_ops->stop_recording             = camera_stop_recording;
+        camera_ops->recording_enabled          = camera_recording_enabled;
+        camera_ops->release_recording_frame    = camera_release_recording_frame;
+        camera_ops->auto_focus                 = camera_auto_focus;
+        camera_ops->cancel_auto_focus          = camera_cancel_auto_focus;
+        camera_ops->take_picture               = camera_take_picture;
+        camera_ops->cancel_picture             = camera_cancel_picture;
+        camera_ops->set_parameters             = camera_set_parameters;
+        camera_ops->get_parameters             = camera_get_parameters;
+        camera_ops->put_parameters             = camera_put_parameters;
+        camera_ops->send_command               = camera_send_command;
+        camera_ops->release                    = camera_release;
+        camera_ops->dump                       = camera_dump;
+
+        *device = &priv_camera_device->base.common;
+
+        priv_camera_device->cameraid = cameraid;
+
+        sp<CameraHardwareInterface> camera = HAL_openCameraHardware(cameraid);
+
+        if(camera == NULL) {
+            LOGE("Couldn't create instance of CameraHal class");
+            rv = -ENOMEM;
+            goto fail;
+        }
+
+        qCamera = camera;
+    }
+
+    return rv;
+
+fail:
+    if(priv_camera_device) {
+        free(priv_camera_device);
+        priv_camera_device = NULL;
+    }
+    if(camera_ops) {
+        free(camera_ops);
+        camera_ops = NULL;
+    }
+    *device = NULL;
+
+    return rv;
+}
+
+int camera_get_number_of_cameras(void) {
+    return HAL_getNumberOfCameras();
+}
+
+int camera_get_camera_info(int camera_id, struct camera_info *info) {
+    CameraInfo cameraInfo;
+
+    HAL_getCameraInfo(camera_id, &cameraInfo);
+
+    info->facing = cameraInfo.facing;
+    info->orientation = info->facing == 1 ? 270 : 90;
+
+    return 0;
+}
