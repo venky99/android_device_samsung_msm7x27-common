@@ -42,7 +42,6 @@ PRODUCT_PACKAGES += \
 ## Other
 PRODUCT_PACKAGES += \
     Stk \
-    CMFileManager \
     make_ext4fs \
     brcm_patchram_plus \
     setup_fs \
@@ -118,14 +117,9 @@ PRODUCT_COPY_FILES += \
 PRODUCT_COPY_FILES += \
     device/samsung/msm7x27-common/prebuilt/usr/idc/sec_touchscreen.idc:system/usr/idc/sec_touchscreen.idc
 
-## GPS configuration
-#PRODUCT_COPY_FILES += \
-#    device/samsung/msm7x27-common/prebuilt/etc/gps.conf:system/etc/gps.conf
-
 ## Prebuilt init.d scripts
 PRODUCT_COPY_FILES += \
-    device/samsung/msm7x27-common/prebuilt/etc/init.d/02compcache:system/etc/init.d/02compcache 
-#    vendor/cm/prebuilt/common/etc/init.local.rc:root/init.local.rc \
+    device/samsung/msm7x27-common/prebuilt/etc/init.d/02compcache:system/etc/init.d/02compcache
 
 ## Other
 PRODUCT_LOCALES += en
