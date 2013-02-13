@@ -96,6 +96,7 @@ PRODUCT_COPY_FILES += \
     device/samsung/msm7x27-common/prebuilt/etc/AutoVolumeControl.txt:system/etc/AutoVolumeControl.txt \
     device/samsung/msm7x27-common/prebuilt/etc/AudioFilter.csv:system/etc/AudioFilter.csv \
     device/samsung/msm7x27-common/prebuilt/etc/media_profiles.xml:system/etc/media_profiles.xml \
+    device/samsung/msm7x27-common/prebuilt/etc/media_codecs.xml:system/etc/media_codecs.xml \
     device/samsung/msm7x27-common/prebuilt/etc/audio_policy.conf:system/etc/audio_policy.conf \
 
 ## Keymap
@@ -116,10 +117,6 @@ PRODUCT_COPY_FILES += \
 ## Touchscreen
 PRODUCT_COPY_FILES += \
     device/samsung/msm7x27-common/prebuilt/usr/idc/sec_touchscreen.idc:system/usr/idc/sec_touchscreen.idc
-
-## Prebuilt init.d scripts
-PRODUCT_COPY_FILES += \
-    device/samsung/msm7x27-common/prebuilt/etc/init.d/02compcache:system/etc/init.d/02compcache
 
 ## Other
 PRODUCT_LOCALES += en
