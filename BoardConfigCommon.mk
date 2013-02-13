@@ -104,9 +104,13 @@ BOARD_WLAN_ATHEROS_SDK	                := AR6kSDK.3.1/AR6kSDK.build_3.1_RC.563
 ## Wi-Fi Hotspot
 BOARD_HAVE_LEGACY_HOSTAPD               := true
 BOARD_HOSTAPD_NO_ENTROPY                := true
+
 ## RIL
 TARGET_PROVIDES_LIBRIL := true
+BOARD_USES_LEGACY_RIL := true
+BOARD_FORCE_RILD_AS_ROOT := true
 BOARD_MOBILEDATA_INTERFACE_NAME := "pdp0"
+BOARD_RIL_CLASS := ../../../device/samsung/msm7x27-common/ril/
 
 ## UMS
 TARGET_USE_CUSTOM_LUN_FILE_PATH := /sys/devices/platform/usb_mass_storage/lun0/file
