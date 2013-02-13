@@ -107,8 +107,8 @@ BOARD_HOSTAPD_NO_ENTROPY                := true
 
 ## RIL
 TARGET_PROVIDES_LIBRIL := true
-#BOARD_USES_LEGACY_RIL := true
-#BOARD_FORCE_RILD_AS_ROOT := true
+BOARD_USES_LEGACY_RIL := true
+BOARD_FORCE_RILD_AS_ROOT := true
 BOARD_MOBILEDATA_INTERFACE_NAME := "pdp0"
 #BOARD_RIL_CLASS := ../../../device/samsung/msm7x27-common/ril/
 
