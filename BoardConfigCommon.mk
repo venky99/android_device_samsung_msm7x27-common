@@ -53,6 +53,8 @@ ENABLE_JSC_JIT := true
 USE_CAMERA_STUB := false
 COMMON_GLOBAL_CFLAGS += -DSAMSUNG_CAMERA_HARDWARE
 BOARD_USE_NASTY_PTHREAD_CREATE_HACK := true
+# Fix for Panorama mode colors
+BOARD_CPU_COLOR_CONVERT := true
 
 ## Qualcomm, display
 BOARD_USES_QCOM_HARDWARE := true
@@ -128,9 +130,6 @@ TARGET_PROVIDES_LIBLIGHTS := true
 
 ## Samsung has weird framebuffer
 TARGET_NO_INITLOGO := true
-
-## Fixes colors in panorama
-BOARD_CPU_COLOR_CONVERT := true
 
 ## Recovery
 BOARD_HAS_DOWNLOAD_MODE := true
