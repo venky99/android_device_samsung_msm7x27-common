@@ -118,6 +118,10 @@ PRODUCT_COPY_FILES += \
 PRODUCT_COPY_FILES += \
     device/samsung/msm7x27-common/prebuilt/usr/idc/sec_touchscreen.idc:system/usr/idc/sec_touchscreen.idc
 
+# GPS conf
+PRODUCT_COPY_FILES += \
+    device/samsung/msm7x27-common/prebuilt/etc/gps.conf:system/etc/gps.conf
+
 ## Loop ringtone
 PRODUCT_PROPERTY_OVERRIDES += \
     ro.telephony.call_ring.multiple=false \
