@@ -13,7 +13,9 @@
 # limitations under the License.
 
 ## GPS configuration
-$(call inherit-product, device/common/gps/gps_eu_supl.mk)
+#$(call inherit-product, device/common/gps/gps_eu_supl.mk)
+PRODUCT_COPY_FILES += \
+    device/samsung/msm7x27-common/prebuilt/etc/gps.conf:system/etc/gps.conf
 
 ## Media
 PRODUCT_PACKAGES += \
@@ -117,10 +119,6 @@ PRODUCT_COPY_FILES += \
 ## Touchscreen
 PRODUCT_COPY_FILES += \
     device/samsung/msm7x27-common/prebuilt/usr/idc/sec_touchscreen.idc:system/usr/idc/sec_touchscreen.idc
-
-# GPS conf
-PRODUCT_COPY_FILES += \
-    device/samsung/msm7x27-common/prebuilt/etc/gps.conf:system/etc/gps.conf
 
 ## Loop ringtone
 PRODUCT_PROPERTY_OVERRIDES += \
