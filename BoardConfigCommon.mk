@@ -93,7 +93,7 @@ WIFI_DRIVER_MODULE_NAME			        := ar6000
 WIFI_AP_DRIVER_MODULE_NAME              := ar6000
 BOARD_HAVE_SAMSUNG_WIFI                 := true
 BOARD_WEXT_NO_COMBO_SCAN		        := true
-BOARD_WPA_SUPPLICANT_DRIVER		        := AR6000
+BOARD_WPA_SUPPLICANT_DRIVER		        := WEXT
 WIFI_DRIVER_MODULE_ARG                  := "ifname=wlan0 fwmode=1"
 BOARD_HOSTAPD_DRIVER			        := WEXT
 WIFI_AP_DRIVER_MODULE_ARG               := "ifname=athap0 fwmode=2"
@@ -112,7 +112,6 @@ TARGET_PROVIDES_LIBRIL := true
 BOARD_USES_LEGACY_RIL := true
 BOARD_FORCE_RILD_AS_ROOT := true
 BOARD_MOBILEDATA_INTERFACE_NAME := "pdp0"
-#BOARD_RIL_CLASS := ../../../device/samsung/msm7x27-common/ril/
 
 ## UMS
 TARGET_USE_CUSTOM_LUN_FILE_PATH := /sys/devices/platform/usb_mass_storage/lun0/file
