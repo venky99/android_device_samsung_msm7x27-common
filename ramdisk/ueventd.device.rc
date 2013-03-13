@@ -68,7 +68,7 @@
 /dev/msm_amrnb_in           0640   system      audio
 
 ## Bluetooth
-/dev/ttyHS0                 0600   bluetooth   bluetooth
+/dev/ttyHS0                 0666   bluetooth   bluetooth
 
 ## Sensors
 /dev/accelerometer          0666   compass    system
