@@ -40,6 +40,7 @@ PRODUCT_PACKAGES += \
 # FM Radio
 PRODUCT_PACKAGES += \
     libfmradio.bcm2049 \
+    FmRadio \
     FmRadioReceiver
 
 ## Vold config
