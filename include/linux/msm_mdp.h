@@ -124,7 +124,7 @@ enum {
 #define MDP_ROT_270 (MDP_ROT_90|MDP_FLIP_UD|MDP_FLIP_LR)
 #define MDP_DITHER 0x8
 #define MDP_BLUR 0x10
-#define MDP_BLEND_FG_PREMULT 0x20000
+#define MDP_BLEND_FG_PREMULT 0x0 /* 0x20000 msm7x27 not supported */
 #define MDP_DEINTERLACE 0x80000000
 #define MDP_SHARPENING  0x40000000
 #define MDP_NO_DMA_BARRIER_START	0x20000000
@@ -356,7 +356,7 @@ struct mdp_histogram_data {
 	uint32_t *c0;
 	uint32_t *c1;
 	uint32_t *c2;
-	uint32_t extra_info[2];
+	uint32_t *extra_info;
 };
 
 struct mdp_pcc_coeff {
