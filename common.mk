@@ -42,11 +42,6 @@ PRODUCT_PACKAGES += \
 PRODUCT_PACKAGES += \
     librpc 
 
-## FM Radio
-PRODUCT_PACKAGES += \
-    Effem \
-    libfmradio.bcm4209
-
 ## Other
 PRODUCT_PACKAGES += \
     CMFileManager \
@@ -79,8 +74,7 @@ PRODUCT_COPY_FILES += \
     frameworks/base/data/etc/platform.xml:system/etc/permissions/platform.xml \
     frameworks/base/data/etc/android.software.sip.xml:system/etc/permissions/android.software.sip.xml \
     frameworks/base/data/etc/android.software.sip.voip.xml:system/etc/permissions/android.software.sip.voip.xml \
-    frameworks/base/data/etc/handheld_core_hardware.xml:system/etc/permissions/handheld_core_hardware.xml \
-    frameworks/base/data/etc/com.stericsson.hardware.fm.receiver.xml:system/etc/permissions/com.stericsson.hardware.fm.receiver.xml
+    frameworks/base/data/etc/handheld_core_hardware.xml:system/etc/permissions/handheld_core_hardware.xml
 
 ## Prebuilt init.d scripts
 PRODUCT_COPY_FILES += \
