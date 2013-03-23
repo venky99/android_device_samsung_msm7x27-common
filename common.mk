@@ -12,6 +12,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+## Some gapps
+$(call inherit-product-if-exists, vendor/google/gapps.mk)
+
 ## Device common overlay
 DEVICE_PACKAGE_OVERLAYS := device/samsung/msm7x27-common/overlay
 
