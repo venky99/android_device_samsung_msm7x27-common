@@ -51,6 +51,10 @@ PRODUCT_PACKAGES += \
     bdaddr_read \
     setup_fs
 
+## Prebuilt init.d scripts
+PRODUCT_COPY_FILES += \
+    vendor/cm/prebuilt/common/etc/init.local.rc:root/init.local.rc
+
 ## Vold config
 PRODUCT_COPY_FILES += \
     device/samsung/msm7x27-common/prebuilt/etc/vold.fstab:system/etc/vold.fstab
