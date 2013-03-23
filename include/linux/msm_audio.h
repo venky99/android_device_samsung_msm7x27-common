@@ -255,6 +255,10 @@ struct msm_audio_pcm_config {
 				   PCM samples */
 };
 
+#define SND_SET_MAIN_MIC 	_IOW(SND_IOCTL_MAGIC, 9, int *)
+#define SND_SET_SUB_MIC 	_IOW(SND_IOCTL_MAGIC, 10, int *)
+#define SND_MAX8899_AMP_OFF _IOW(SND_IOCTL_MAGIC, 11, int *)
+
 #define AUDIO_EVENT_SUSPEND 0
 #define AUDIO_EVENT_RESUME 1
 #define AUDIO_EVENT_WRITE_DONE 2
