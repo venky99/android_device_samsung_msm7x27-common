@@ -71,7 +71,7 @@
 /dev/ttyHS0                 0666   root        system
 
 ## FM Radio
-/dev/bmc4209                0666   system      audio
+/dev/bcm4209                0666   system      audio
 
 ## Sensors
 /dev/accelerometer          0666   compass    system
