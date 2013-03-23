@@ -85,8 +85,8 @@ PRODUCT_COPY_FILES += \
 ## Prebuilt init.d scripts
 PRODUCT_COPY_FILES += \
     device/samsung/msm7x27-common/prebuilt/etc/init.d/01bt:system/etc/init.d/01bt \
-    prebuilt/etc/init.d/999youtube:system/etc/init.d/999youtube
-    prebuilt/etc/init.d/init.qcom.post_boot.sh:system/etc/init.qcom.post_boot.sh
+    device/samsung/msm7x27-common/prebuilt/etc/init.d/999youtube:system/etc/init.d/999youtube
+    device/samsung/msm7x27-common/prebuilt/etc/init.d/init.qcom.post_boot.sh:system/etc/init.qcom.post_boot.sh
 
 ## Wi-Fi & networking
 PRODUCT_COPY_FILES += \
