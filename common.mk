@@ -38,6 +38,12 @@ PRODUCT_PACKAGES += \
     audio.a2dp.default \
     libaudioutils
 
+## FM Support
+PRODUCT_PACKAGES += \
+    FmRadio \
+    FmRadioReceiver \
+    libfmradio.bcm4209
+
 ## GPS
 PRODUCT_PACKAGES += \
     librpc 
@@ -79,6 +85,7 @@ PRODUCT_COPY_FILES += \
     frameworks/base/data/etc/android.software.sip.xml:system/etc/permissions/android.software.sip.xml \
     frameworks/base/data/etc/android.software.sip.voip.xml:system/etc/permissions/android.software.sip.voip.xml \
     frameworks/base/data/etc/handheld_core_hardware.xml:system/etc/permissions/handheld_core_hardware.xml
+    frameworks/base/data/etc/com.stericsson.hardware.fm.receiver.xml:system/etc/permissions/com.stericsson.hardware.fm.receiver.xml
 
 ## Prebuilt init.d scripts
 PRODUCT_COPY_FILES += \
