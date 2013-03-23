@@ -37,8 +37,6 @@ TARGET_CPU_ABI2 := armeabi
 TARGET_BOARD_PLATFORM_GPU := qcom-adreno200
 TARGET_SPECIFIC_HEADER_PATH := device/samsung/msm7x27-common/include
 
-## Otatool
-TARGET_RELEASETOOL_OTA_FROM_TARGET_SCRIPT := device/samsung/msm7x27-common/releasetools/ota_from_target_files
 ## Webkit
 ENABLE_WEBGL := true
 TARGET_WEBKIT_USE_MORE_MEMORY := true
