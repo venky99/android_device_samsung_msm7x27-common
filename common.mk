@@ -82,7 +82,8 @@ PRODUCT_PROPERTY_OVERRIDES += \
     hwui.render_dirty_regions=false \
     hwui.disable_vsync=true \
     hwui.print_config=choice \
-    persist.sys.strictmode.visual=false
+    persist.sys.strictmode.visual=false \
+    persist.sys.use_dithering=1
 
 PRODUCT_PROPERTY_OVERRIDES += \
     video.accelerate.hw=1 \
