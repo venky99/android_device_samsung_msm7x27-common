@@ -92,8 +92,8 @@
         <EncoderProfile quality="high" fileFormat="mp4" duration="60">
             <Video codec="h263"
                    bitRate="3000000"
-                   width="640"
-                   height="480"
+                   width="320"
+                   height="240"
                    frameRate="15" />
             <Audio codec="aac"
                    bitRate="96000"
