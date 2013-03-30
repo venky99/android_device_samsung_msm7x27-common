@@ -138,3 +138,5 @@ BOARD_RECOVERY_HANDLES_MOUNT := true
 BOARD_CUSTOM_RECOVERY_KEYMAPPING := ../../device/samsung/msm7x27-common/recovery/recovery_ui.c
 TARGET_RECOVERY_INITRC := device/samsung/msm7x27-common/recovery/recovery.rc
 TARGET_RECOVERY_FSTAB := device/samsung/msm7x27-common/recovery/recovery.fstab
+
+TARGET_RELEASETOOL_OTA_FROM_TARGET_SCRIPT := device/samsung/msm7x27-common/releasetools/ota_from_target_files
