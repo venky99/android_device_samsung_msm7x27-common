@@ -40,8 +40,7 @@ PRODUCT_PACKAGES += \
 
 ## FM Support
 PRODUCT_PACKAGES += \
-    FmRadio \
-    FmRadioReceiver \
+    Effem \
     libfmradio.bcm4209
 
 ## GPS
