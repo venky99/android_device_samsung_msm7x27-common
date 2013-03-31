@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-$(call inherit-product, device/qcom/msm7x27/msm7x27.mk)
+
 
 ## Audio
 PRODUCT_PACKAGES += \
@@ -113,6 +113,10 @@ PRODUCT_PROPERTY_OVERRIDES += \
 # Other
 PRODUCT_LOCALES += en ru_RU
 PRODUCT_AAPT_CONFIG := ldpi mdpi normal
+
+$(call inherit-product, device/qcom/msm7x27/msm7x27.mk)
+
+PRODUCT_BUILD_PROP_OVERRIDES += BUILD_UTC_DATE=0
 
 # Samsung msm7x27-common overlays
 DEVICE_PACKAGE_OVERLAYS += device/samsung/msm7x27-common/overlay
