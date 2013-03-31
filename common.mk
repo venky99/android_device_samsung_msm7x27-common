@@ -37,6 +37,14 @@ PRODUCT_PACKAGES += \
     brcm_patchram_plus \
     setup_fs
 
+PRODUCT_PACKAGES += \
+    bluetoothd \
+    libbluetoothd \
+    hcitool \
+    hciconfig \
+    hciattach \
+    hwaddrs
+
 ## Vold config
 PRODUCT_COPY_FILES += \
     device/samsung/msm7x27-common/prebuilt/etc/vold.fstab:system/etc/vold.fstab
@@ -91,7 +99,11 @@ PRODUCT_COPY_FILES += \
 
 # Dithering
 PRODUCT_PROPERTY_OVERRIDES += \
-    persist.sys.use_dithering=0
+    persist.sys.use_dithering=2
+
+# Bluetooth
+PRODUCT_PROPERTY_OVERRIDES += \
+ro.qc.bluetooth.stack=bluez
 
 ## Loop ringtone
 PRODUCT_PROPERTY_OVERRIDES += \
