@@ -37,11 +37,6 @@ PRODUCT_PACKAGES += \
     brcm_patchram_plus \
     setup_fs
 
-# FM Radio
-PRODUCT_PACKAGES += \
-    libfmradio.si4708 \
-    FmRadioReceiver
-
 ## Vold config
 PRODUCT_COPY_FILES += \
     device/samsung/msm7x27-common/prebuilt/etc/vold.fstab:system/etc/vold.fstab
@@ -73,10 +68,6 @@ PRODUCT_COPY_FILES += \
     device/samsung/msm7x27-common/prebuilt/etc/media_profiles.xml:system/etc/media_profiles.xml \
     device/samsung/msm7x27-common/prebuilt/etc/audio_policy.conf:system/etc/audio_policy.conf \
     device/samsung/msm7x27-common/prebuilt/etc/media_codecs.xml:system/etc/media_codecs.xml
-
-# FM Radio
-PRODUCT_COPY_FILES += \
-    frameworks/native/data/etc/com.stericsson.hardware.fm.receiver.xml:system/etc/permissions/com.stericsson.hardware.fm.receiver.xml
 
 ## Keymap
 PRODUCT_COPY_FILES += \
