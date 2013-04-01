@@ -17,6 +17,12 @@
 # Product-common compile-time definitions.
 #
 
+## Bluetooth
+BOARD_HAVE_BLUETOOTH := true
+BOARD_HAVE_SAMSUNG_BLUETOOTH := true
+BOARD_HAVE_BLUETOOTH_BCM := true
+BOARD_BLUEDROID_VENDOR_CONF := device/samsung/msm7x27-common/bluetooth/vnd_samsung.txt
+
 # Use the Qualcomm common folder
 include device/qcom/msm7x27/BoardConfigCommon.mk
 
@@ -38,11 +44,6 @@ TARGET_WEBKIT_USE_MORE_MEMORY := true
 USE_CAMERA_STUB := false
 BOARD_USE_NASTY_PTHREAD_CREATE_HACK := true
 
-# FM Radio
-#BOARD_USES_STE_FMRADIO := true
-BOARD_HAVE_QCOM_FM := true
-COMMON_GLOBAL_CFLAGS += -DSTE_FM -DQCOM_FM_ENABLED
-
 ## Qualcomm, display
 COMMON_GLOBAL_CFLAGS += -DREFRESH_RATE=60
 COMMON_GLOBAL_CFLAGS += -DSAMSUNG_CAMERA_QCOM
@@ -56,16 +57,11 @@ BOARD_VENDOR_QCOM_GPS_LOC_API_AMSS_VERSION := 50000
 BOARD_VENDOR_QCOM_GPS_LOC_API_HARDWARE_LEGACY := msm7x27 # don't use hardware/qcom/gps version yet
 BOARD_USES_QCOM_LIBRPC := true
 
-## Bluetooth
-BOARD_HAVE_BLUETOOTH := true
-BOARD_HAVE_SAMSUNG_BLUETOOTH := true
-BOARD_HAVE_BLUETOOTH_BCM := true
-BOARD_BLUEDROID_VENDOR_CONF := device/samsung/msm7x27-common/bluetooth/vnd_samsung.txt
-
 ## FM
 BOARD_HAVE_FM_RADIO := true
-BOARD_GLOBAL_CFLAGS += -DHAVE_FM_RADIO -DQCOM_FM_ENABLED
+BOARD_GLOBAL_CFLAGS += -DHAVE_FM_RADIO -DQCOM_FM_ENABLED -DSTE_FM
 BOARD_FM_DEVICE := bcm2049
+BOARD_USES_STE_FMRADIO := true
 
 ## Wi-Fi
 COMMON_GLOBAL_CFLAGS += -DWIFI_AP_HAS_OWN_DRIVER
