@@ -40,6 +40,7 @@ TARGET_SPECIFIC_HEADER_PATH := device/samsung/msm7x27-common/include
 ## Webkit
 ENABLE_WEBGL := true
 TARGET_WEBKIT_USE_MORE_MEMORY := true
+TARGET_FORCE_CPU_UPLOAD := true
 
 ## V8
 JS_ENGINE := v8
@@ -52,30 +53,30 @@ ENABLE_JSC_JIT := true
 ## Camera
 USE_CAMERA_STUB := false
 COMMON_GLOBAL_CFLAGS += -DSAMSUNG_CAMERA_HARDWARE
-BOARD_USE_NASTY_PTHREAD_CREATE_HACK := true
-# Fix for Panorama mode colors
-BOARD_CPU_COLOR_CONVERT := true
 
-## Qualcomm, display
-BOARD_USES_QCOM_HARDWARE := true
-USE_OPENGL_RENDERER := true
-BOARD_ADRENO_DECIDE_TEXTURE_TARGET := true
-BOARD_EGL_CFG := device/samsung/msm7x27-common/prebuilt/lib/egl/egl.cfg
-BOARD_NEEDS_MEMORYHEAPPMEM := true
+# Tests
+# BOARD_USE_NASTY_PTHREAD_CREATE_HACK := true
+# BOARD_CPU_COLOR_CONVERT := true
 
-COMMON_GLOBAL_CFLAGS += -DQCOM_LEGACY_OMX
-COMMON_GLOBAL_CFLAGS += -DQCOM_HARDWARE -DREFRESH_RATE=60
-COMMON_GLOBAL_CFLAGS += -DQCOM_NO_SECURE_PLAYBACK -DBINDER_COMPAT
-COMMON_GLOBAL_CFLAGS += -DFORCE_CPU_UPLOAD -DQCOM_ICS_COMPAT -DSAMSUNG_CAMERA_QCOM
++## Qualcomm
++BOARD_USES_QCOM_HARDWARE := true
++BOARD_NEEDS_MEMORYHEAPPMEM := true
++USE_OPENGL_RENDERER := true
++BOARD_EGL_CFG := device/samsung/msm7x27-common/prebuilt/lib/egl/egl.cfg
++ARD_ADRENO_DECIDE_TEXTURE_TARGET := true
++BOARD_USES_QCOM_LIBS := true
++TARGET_USES_GENLOCK := true
++TARGET_LIBAGL_USE_GRALLOC_COPYBITS := true
++COMMON_GLOBAL_CFLAGS += -DQCOM_LEGACY_OMX
++COMMON_GLOBAL_CFLAGS += -DQCOM_HARDWARE -DREFRESH_RATE=60
++COMMON_GLOBAL_CFLAGS += -DQCOM_NO_SECURE_PLAYBACK -DBINDER_COMPAT
++COMMON_GLOBAL_CFLAGS += -DFORCE_CPU_UPLOAD -DQCOM_ICS_COMPAT -DSAMSUNG_CAMERA_QCOM
++COMMON_GLOBAL_CFLAGS += -DTARGET_MSM7x27
 
 ## GPS
 BOARD_USES_QCOM_GPS := true
 BOARD_VENDOR_QCOM_GPS_LOC_API_AMSS_VERSION := 1240
 BOARD_USES_QCOM_LIBRPC := true
-BOARD_GPS_LIBRARIES := libgps
-
-## Other Qualcomm config
-BOARD_USES_QCOM_LIBS := true
 
 ## Bluetooth
 BOARD_HAVE_BLUETOOTH := true
@@ -88,29 +89,22 @@ BOARD_GLOBAL_CFLAGS += -DHAVE_FM_RADIO -DQCOM_FM_ENABLED
 BOARD_FM_DEVICE := brcm2049
 
 ## Wi-Fi
-WPA_SUPPLICANT_VERSION                  := VER_0_6_X
-WIFI_DRIVER_MODULE_NAME			        := ar6000
-WIFI_AP_DRIVER_MODULE_NAME              := ar6000
-BOARD_HAVE_SAMSUNG_WIFI                 := true
-BOARD_WEXT_NO_COMBO_SCAN		        := true
-BOARD_WPA_SUPPLICANT_DRIVER		        := WEXT
-WIFI_DRIVER_MODULE_ARG                  := "ifname=wlan0 fwmode=1"
-BOARD_HOSTAPD_DRIVER			        := WEXT
-WIFI_AP_DRIVER_MODULE_ARG               := "ifname=athap0 fwmode=2"
-BOARD_WLAN_DEVICE                       := ath6kl
-WIFI_DRIVER_MODULE_PATH                 := /system/wifi/ar6000.ko
-WIFI_AP_DRIVER_MODULE_PATH              := /system/wifi/ar6000.ko
-BOARD_WLAN_CHIP_AR6003                  := true
-BOARD_WLAN_ATHEROS_SDK	                := AR6kSDK.3.1/AR6kSDK.build_3.1_RC.563
+BOARD_WPA_SUPPLICANT_DRIVER := WEXT
+WPA_SUPPLICANT_VERSION := VER_0_6_X
+BOARD_WLAN_DEVICE := ath6kl
+WIFI_AP_DRIVER_MODULE_ARG := "ifname=athap0 fwmode=2"
+WIFI_AP_DRIVER_MODULE_PATH := /system/wifi/ar6000.ko
+WIFI_AP_DRIVER_MODULE_NAME := ar6000
+WIFI_DRIVER_MODULE_ARG := "ifname=wlan0 fwmode=1"
+WIFI_DRIVER_MODULE_PATH := /system/wifi/ar6000.ko
+WIFI_DRIVER_MODULE_NAME := ar6000
+BOARD_HAVE_SAMSUNG_WIFI := true
 
 ## Wi-Fi Hotspot
-BOARD_HAVE_LEGACY_HOSTAPD               := true
-BOARD_HOSTAPD_NO_ENTROPY                := true
+BOARD_HAVE_LEGACY_HOSTAPD := true
+BOARD_HOSTAPD_NO_ENTROPY := true
 
 ## RIL
-TARGET_PROVIDES_LIBRIL := true
-BOARD_USES_LEGACY_RIL := true
-BOARD_FORCE_RILD_AS_ROOT := true
 BOARD_MOBILEDATA_INTERFACE_NAME := "pdp0"
 
 ## UMS
@@ -120,15 +114,18 @@ BOARD_UMS_LUNFILE := "/sys/devices/platform/usb_mass_storage/lun0/file"
 ## Support for legacy touch screen
 BOARD_USE_LEGACY_TOUCHSCREEN := true
 
-## Audio
+## Device specific libs
 TARGET_PROVIDES_LIBAUDIO := true
-BOARD_HAVE_SAMSUNG_AUDIO := true
-
-## Custom lights module
 TARGET_PROVIDES_LIBLIGHTS := true
 
 ## Samsung has weird framebuffer
 TARGET_NO_INITLOGO := true
+
+## Fix libcamera crash
+TARGET_DISABLE_ARM_PIE := true
+
+## Fix colors in panorama mode
+BOARD_CPU_COLOR_CONVERT := true
 
 ## Recovery
 BOARD_HAS_DOWNLOAD_MODE := true
@@ -142,3 +139,6 @@ BOARD_KERNEL_CMDLINE :=
 BOARD_BML_BOOT := "/dev/block/bml8"
 BOARD_BML_RECOVERY := "/dev/block/bml9"
 BOARD_RECOVERY_HANDLES_MOUNT := true
+BOARD_CUSTOM_RECOVERY_KEYMAPPING := ../../device/samsung/msm7x27-common/recovery/recovery_ui.c
+TARGET_RECOVERY_INITRC := device/samsung/msm7x27-common/recovery/recovery.rc
+TARGET_RECOVERY_FSTAB := device/samsung/msm7x27-common/recovery/recovery.fstab
