@@ -16,6 +16,6 @@ LOCAL_SHARED_LIBRARIES := liblog libutils libcutils
 LOCAL_SHARED_LIBRARIES += libui libhardware libcamera_client
 LOCAL_SHARED_LIBRARIES += libcamera libseccameraadaptor
 
-LOCAL_LDFLAGS         += -Lout/target/product/$(TARGET_DEVICE)/obj/lib/ -lcamera 
+LOCAL_LDFLAGS         += -Lvendor/samsung/gio/proprietary/lib -lcamera
 
 include $(BUILD_SHARED_LIBRARY)
