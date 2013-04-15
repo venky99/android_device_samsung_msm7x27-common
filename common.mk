@@ -29,6 +29,12 @@ PRODUCT_PACKAGES += \
     gps.msm7x27 \
     librpc
 
+## FM Radio
+PRODUCT_PACKAGES += \
+	libfmradio.bcm2049 \
+	FmRadio \
+	FmRadioReceiver
+
 ## Other
 PRODUCT_PACKAGES += \
     lights.msm7x27 \
