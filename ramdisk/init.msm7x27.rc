@@ -1,4 +1,6 @@
-import init.msm7x27.usb.rc
+import /init.${ro.hardware}.parts.rc
+import /init.${ro.hardware}.usb.rc
+import /init.${ro.hardware}.bluez.rc
 
 on init
     insmod /lib/modules/fsr.ko
@@ -58,6 +60,7 @@ on boot
 
 # Setup bluetooth
     setprop ro.bt.bdaddr_path "/data/.nvmac_bt.info"
+<<<<<<< HEAD
     chown bluetooth net_bt_stack /sys/module/bluetooth_power/parameters/power
     chown bluetooth net_bt_stack /sys/class/rfkill/rfkill0/type
     chown bluetooth net_bt_stack /sys/class/rfkill/rfkill0/state
@@ -68,6 +71,8 @@ on boot
     chmod 0660 /proc/bluetooth/sleep/proto
     chown bluetooth net_bt_stack /sys/devices/platform/msm_serial_hs.0/clock
     chmod 0660 /sys/devices/platform/msm_serial_hs.0/clock
+=======
+>>>>>>> 17bc613... Samsung msm7x27-common: initial BlueZ support
 
 # Sensors
     mkdir /data/misc/sensors 0777 system misc
