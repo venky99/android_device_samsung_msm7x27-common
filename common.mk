@@ -120,11 +120,6 @@ PRODUCT_COPY_FILES += \
 PRODUCT_COPY_FILES += \
     device/samsung/msm7x27-common/prebuilt/usr/idc/sec_touchscreen.idc:system/usr/idc/sec_touchscreen.idc
 
-## Loop ringtone
-PRODUCT_PROPERTY_OVERRIDES += \
-    ro.telephony.call_ring.multiple=false \
-    ro.telephony.call_ring.delay=3000
-
 ## init.d
 PRODUCT_COPY_FILES += \
     device/samsung/msm7x27-common/prebuilt/etc/init.d/999youtube:system/etc/init.d/999youtube
