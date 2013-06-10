@@ -17,6 +17,11 @@
 # Product-common compile-time definitions.
 #
 
+## Bluetooth
+BOARD_HAVE_BLUETOOTH := true
+BOARD_HAVE_SAMSUNG_BLUETOOTH := true
+BOARD_HAVE_BLUETOOTH_BCM := true
+
 LOCAL_PATH:= $(call my-dir)
 
 include vendor/samsung/msm7x27-common/BoardConfigVendor.mk
@@ -73,11 +78,6 @@ COMMON_GLOBAL_CFLAGS += -DTARGET_MSM7x27
 BOARD_USES_QCOM_GPS := true
 BOARD_VENDOR_QCOM_GPS_LOC_API_AMSS_VERSION := 1240
 BOARD_USES_QCOM_LIBRPC := true
-
-## Bluetooth
-BOARD_HAVE_BLUETOOTH := true
-BOARD_HAVE_SAMSUNG_BLUETOOTH := true
-BOARD_HAVE_BLUETOOTH_BCM := true
 
 ## FM
 BOARD_HAVE_FM_RADIO := true
