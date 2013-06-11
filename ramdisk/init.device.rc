@@ -124,18 +124,12 @@ on boot
     chown system system /sys/module/g_android/parameters/product_id
     chown system system /sys/devices/platform/msm_sdcc.1/polling
     chown system system /sys/devices/platform/msm_sdcc.2/polling
-    chown system system /sys/devices/platform/msm_sdcc.3/polling
-    chown system system /sys/devices/platform/msm_sdcc.4/polling
     chown system system /sys/devices/platform/android_usb/composition
     chown system system /sys/devices/platform/android_usb/remote_wakeup
     
     # create data/gps for GPS daemon
     mkdir /data/gps 771 gps system
     chown gps system /data/gps
-
-    # Enable MASS storage on SDCARD
-    write /sys/devices/platform/mass_storage/lun0/file /dev/block/mmcblk0p1
-    write /sys/bus/platform/drivers/msm_sdcc/msm_sdcc.1/polling 1
 
 on property:persist.service.adb.enable=1
     start adbd
