@@ -89,7 +89,10 @@ BOARD_GLOBAL_CFLAGS += -DHAVE_FM_RADIO -DQCOM_FM_ENABLED
 BOARD_FM_DEVICE := brcm2049
 
 ## Wi-Fi
+# Drivers for ifaces
 BOARD_WPA_SUPPLICANT_DRIVER := WEXT
+BOARD_HOSTAPD_DRIVER := WEXT
+# wpa_supplicant version, wifi/AP commands and drivers
 WPA_SUPPLICANT_VERSION := VER_0_6_X
 BOARD_WLAN_DEVICE := ath6kl
 WIFI_AP_DRIVER_MODULE_ARG := "ifname=athap0 fwmode=2"
@@ -98,7 +101,11 @@ WIFI_AP_DRIVER_MODULE_NAME := ar6000
 WIFI_DRIVER_MODULE_ARG := "ifname=wlan0 fwmode=1"
 WIFI_DRIVER_MODULE_PATH := /system/wifi/ar6000.ko
 WIFI_DRIVER_MODULE_NAME := ar6000
+# Some other stuff
 BOARD_HAVE_SAMSUNG_WIFI := true
+BOARD_WEXT_NO_COMBO_SCAN := true
+BOARD_WLAN_CHIP_AR6003 := true
+BOARD_WLAN_ATHEROS_SDK := AR6kSDK.3.1/AR6kSDK.build_3.1_RC.563
 
 ## Wi-Fi Hotspot
 BOARD_HAVE_LEGACY_HOSTAPD := true
@@ -139,6 +146,6 @@ BOARD_KERNEL_CMDLINE :=
 BOARD_BML_BOOT := "/dev/block/bml8"
 BOARD_BML_RECOVERY := "/dev/block/bml9"
 BOARD_RECOVERY_HANDLES_MOUNT := true
-BOARD_CUSTOM_RECOVERY_KEYMAPPING := ../../device/samsung/msm7x27-common/recovery/recovery_ui.c
-TARGET_RECOVERY_INITRC := device/samsung/msm7x27-common/recovery/recovery.rc
-TARGET_RECOVERY_FSTAB := device/samsung/msm7x27-common/recovery/recovery.fstab
+#BOARD_CUSTOM_RECOVERY_KEYMAPPING := ../../device/samsung/msm7x27-common/recovery/recovery_ui.c
+#TARGET_RECOVERY_INITRC := device/samsung/msm7x27-common/recovery/recovery.rc
+#TARGET_RECOVERY_FSTAB := device/samsung/msm7x27-common/recovery/recovery.fstab
