@@ -27,6 +27,7 @@ on init
     write /sys/class/android_usb/android0/idProduct 685e
     write /sys/class/android_usb/android0/functions mass_storage,adb
     write /sys/class/android_usb/android0/enable 1
+    setprop service.adb.root 1
     start adbd
     setprop mass_storage,adb 
 
