@@ -56,6 +56,10 @@ PRODUCT_PACKAGES += \
     bdaddr_read \
     setup_fs
 
+## Wifi
+PRODUCT_PACKAGES += \
+    lib_driver_cmd_ath6kl_compat
+
 ## Prebuilt init.d scripts
 PRODUCT_COPY_FILES += \
     vendor/cm/prebuilt/common/etc/init.local.rc:root/init.local.rc
