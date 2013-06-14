@@ -45,6 +45,9 @@ on boot
 # Systrace
     mount debugfs /sys/kernel/debug /sys/kernel/debug
 
+    # ath6kl compat (harmless if file doesn't exist)
+    insmod /system/lib/modules/compat.ko
+
 # Increase read throughput from sd card
     #write /sys/block/mmcblk0/bdi/read_ahead_kb 4096
 
