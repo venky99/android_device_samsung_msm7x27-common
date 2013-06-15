@@ -120,6 +120,7 @@ PRODUCT_COPY_FILES += \
 ## Wi-Fi & networking
 PRODUCT_COPY_FILES += \
     device/samsung/msm7x27-common/prebuilt/etc/wifi/wpa_supplicant.conf:system/etc/wifi/wpa_supplicant.conf \
+    device/samsung/msm7x27-common/prebuilt/etc/dhcpcd/dhcpcd.conf:system/etc/dhcpcd/dhcpcd.conf \
     device/samsung/msm7x27-common/prebuilt/etc/wifi/hostapd.conf:system/etc/wifi/hostapd.conf \
     device/samsung/msm7x27-common/prebuilt/bin/get_macaddrs:system/bin/get_macaddrs
 
