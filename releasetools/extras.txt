@@ -1,14 +1,39 @@
+## These apps are depends on GAPPS
+# Don't include these apps if gapps included
+#app/Gallery2.apk
+#app/Gallery2.odex
+#app/Provision.apk
+#app/Provision.odex
+#app/QuickSearchBox.apk
+#app/QuickSearchBox.odex
+
+# Fix FC (prebuilt)
+app/Superuser.odex
+
+# Video editor (5MB)
+app/VideoEditor.apk
+app/VideoEditor.odex
+lib/libvideoeditor_jni.so
+lib/libvideoeditorplayer.so
+
 # RomManager (2.5MB)
 app/RomManager.apk
+app/RomManager.odex
 
+# CM Wallpapers (7MB)
+app/CMWallpapers.apk
+app/CMWallpapers.odex
 
 # LiveWallpapers (1MB)
 app/MagicSmokeWallpapers.apk
+app/MagicSmokeWallpapers.odex
 app/Galaxy4.apk
+app/Galaxy4.odex
 app/PhaseBeam.apk
+app/PhaseBeam.odex
 
 # Boot animation: 2MB
-media/bootanimation.zip
+# media/bootanimation.zip
 
 # tts/lang_pico (4MB)
 #tts/lang_pico/en-GB_kh0_sg.bin
@@ -35,6 +60,14 @@ media/audio/ringtones/Themos.ogg
 media/audio/ringtones/UrsaMinor.ogg
 media/audio/ringtones/Perseus.ogg
 media/audio/ringtones/Scarabaeus.ogg
+
+# from VideoPackage2
+media/video/AndroidInSpace.240p.mp4
+media/video/AndroidInSpace.480p.mp4
+media/video/Sunset.240p.mp4
+media/video/Sunset.480p.mp4
+media/video/Disco.240p.mp4
+media/video/Disco.480p.mp4
 
 # from AudioPackageNewWave
 media/audio/ringtones/BentleyDubs.ogg
