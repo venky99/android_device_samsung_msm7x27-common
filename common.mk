@@ -41,7 +41,7 @@ PRODUCT_PACKAGES += \
 ## FM Support
 PRODUCT_PACKAGES += \
     Effem \
-    libfmradio.bcm4209
+    libfmradio.bcm2049
 
 ## GPS
 PRODUCT_PACKAGES += \
