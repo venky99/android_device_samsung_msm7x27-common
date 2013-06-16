@@ -99,7 +99,7 @@
          Bluetooth Module -->
     <bool name="config_bluetooth_adapter_quick_switch">false</bool>
 
-    <string name="config_legacyUmsLunFile">/sys/class/android_usb/android0/f_mass_storage/lun/file</string>
+    <string name="config_legacyUmsLunFile">/sys/devices/platform/msm_hsusb/gadget/lun0/file</string>
 
     <!-- Hardware 'face' keys present on the device, stored as a bit field.
          This integer should equal the sum of the corresponding value for each

@@ -103,7 +103,7 @@ on boot
     chown system system /sys/class/input/input3/poll_delay
     chmod 0660 /sys/class/input/input3/enable
     chmod 0660 /sys/class/input/input3/poll_delay
-    chmod 0664 /sys/class/usb_composite/rndis/enable
+    #chmod 0664 /sys/class/usb_composite/rndis/enable
     chown system radio /sys/devices/virtual/touch/firmware/firmware
     chmod 0664 /sys/devices/virtual/touch/firmware/firmware
     chown system radio /sys/devices/virtual/touch/firmware/firmware_ret
@@ -125,8 +125,8 @@ on boot
     chown system system /sys/devices/platform/msm_sdcc.2/polling
     chown system system /sys/devices/platform/msm_sdcc.3/polling
     chown system system /sys/devices/platform/msm_sdcc.4/polling
-    chown system system /sys/devices/platform/android_usb/composition
-    chown system system /sys/devices/platform/android_usb/remote_wakeup
+    #chown system system /sys/devices/platform/android_usb/composition
+    #chown system system /sys/devices/platform/android_usb/remote_wakeup
     
     # create data/gps for GPS daemon
     mkdir /data/gps 771 gps system
