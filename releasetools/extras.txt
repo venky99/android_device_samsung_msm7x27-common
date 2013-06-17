@@ -12,25 +12,19 @@ app/Superuser.odex
 
 # Video editor (5MB)
 app/VideoEditor.apk
-app/VideoEditor.odex
 lib/libvideoeditor_jni.so
 lib/libvideoeditorplayer.so
 
 # RomManager (2.5MB)
 app/RomManager.apk
-app/RomManager.odex
 
 # CM Wallpapers (7MB)
 app/CMWallpapers.apk
-app/CMWallpapers.odex
 
 # LiveWallpapers (1MB)
 app/MagicSmokeWallpapers.apk
-app/MagicSmokeWallpapers.odex
 app/Galaxy4.apk
-app/Galaxy4.odex
 app/PhaseBeam.apk
-app/PhaseBeam.odex
 
 # Boot animation: 2MB
 # media/bootanimation.zip
