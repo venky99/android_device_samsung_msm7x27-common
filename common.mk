@@ -58,7 +58,7 @@ PRODUCT_PACKAGES += \
 
 ## Prebuilt init.d scripts
 PRODUCT_COPY_FILES += \
-    vendor/cm/prebuilt/common/etc/init.local.rc:root/init.local.rc
+    vendor/aokp/prebuilt/common/etc/init.local.rc:root/init.local.rc
 
 ## Vold config
 PRODUCT_COPY_FILES += \
