@@ -1,5 +1,6 @@
 /*
 ** Copyright 2008, The Android Open-Source Project
+** Copyright (c) 2012, Code Aurora Forum. All rights reserved.
 **
 ** Licensed under the Apache License, Version 2.0 (the "License");
 ** you may not use this file except in compliance with the License.
@@ -17,6 +18,9 @@
 #ifndef ANDROID_AUDIO_HARDWARE_H
 #define ANDROID_AUDIO_HARDWARE_H
 
+// P500 SPEAKER_IN_CALL fix
+#define AUDIO_DEVICE_OUT_SPEAKER_IN_CALL 0x4000
+
 #include <stdint.h>
 #include <sys/types.h>
 
@@ -28,9 +32,15 @@
 extern "C" {
 #include <linux/msm_audio.h>
 #include <linux/msm_audio_voicememo.h>
+#include <linux/msm_audio_aac.h>
+#include <linux/msm_audio_amrnb.h>
+#include <linux/msm_audio_qcp.h>
 }
 
+
 namespace android_audio_legacy {
+using android::SortedVector;
+using android::Mutex;
 
 // ----------------------------------------------------------------------------
 // Kernel driver interface
@@ -49,13 +59,13 @@ namespace android_audio_legacy {
 #define EQ_MAX_BAND_NUM 12
 
 #define ADRC_ENABLE  0x0001
-#define ADRC_DISABLE 0x0000
+#define ADRC_DISABLE 0xFFFE
 #define EQ_ENABLE    0x0002
-#define EQ_DISABLE   0x0000
+#define EQ_DISABLE   0xFFFD
 #define RX_IIR_ENABLE  0x0004
-#define RX_IIR_DISABLE 0x0000
+#define RX_IIR_DISABLE 0xFFFB
 #define MBADRC_ENABLE  0x0010
-#define MBADRC_DISABLE 0x0000
+#define MBADRC_DISABLE 0xFFEF
 
 #define AGC_ENABLE     0x0001
 #define NS_ENABLE      0x0002
@@ -144,7 +154,7 @@ enum tty_modes {
 #define CODEC_TYPE_PCM 0
 #define AUDIO_HW_NUM_OUT_BUF 2  // Number of buffers in audio driver for output
 // TODO: determine actual audio DSP and hardware latency
-#define AUDIO_HW_OUT_LATENCY_MS 40  // Additionnal latency introduced by audio DSP and hardware in ms
+#define AUDIO_HW_OUT_LATENCY_MS 0  // Additionnal latency introduced by audio DSP and hardware in ms
 
 #define AUDIO_HW_IN_SAMPLERATE 8000                 // Default audio input sample rate
 #define AUDIO_HW_IN_CHANNELS (AudioSystem::CHANNEL_IN_MONO) // Default audio input channel mask
@@ -152,7 +162,11 @@ enum tty_modes {
 #define AUDIO_HW_IN_FORMAT (AudioSystem::PCM_16_BIT)  // Default audio input sample format
 // ----------------------------------------------------------------------------
 
-
+using android_audio_legacy::AudioHardwareBase;
+using android_audio_legacy::AudioStreamOut;
+using android_audio_legacy::AudioStreamIn;
+using android_audio_legacy::AudioSystem;
+using android_audio_legacy::AudioHardwareInterface;
 class AudioHardware : public  AudioHardwareBase
 {
     class AudioStreamOutMSM72xx;
@@ -165,6 +179,9 @@ public:
 
     virtual status_t    setVoiceVolume(float volume);
     virtual status_t    setMasterVolume(float volume);
+#ifdef HAVE_FM_RADIO
+    virtual status_t    setFmVolume(float volume);
+#endif
     virtual status_t    setMode(int mode);
 
     // mic mute
@@ -209,6 +226,9 @@ private:
     uint32_t    getInputSampleRate(uint32_t sampleRate);
     bool        checkOutputStandby();
     status_t    doRouting(AudioStreamInMSM72xx *input);
+#ifdef HAVE_FM_RADIO
+    status_t    setFmOnOff(bool onoff);
+#endif
     AudioStreamInMSM72xx*   getActiveInput_l();
 
     class AudioStreamOutMSM72xx : public AudioStreamOut {
@@ -235,8 +255,6 @@ private:
         virtual String8     getParameters(const String8& keys);
                 uint32_t    devices() { return mDevices; }
         virtual status_t    getRenderPosition(uint32_t *dspFrames);
-        virtual status_t    addAudioEffect(effect_handle_t effect){return INVALID_OPERATION;}
-        virtual status_t    removeAudioEffect(effect_handle_t effect){return INVALID_OPERATION;}
 
     private:
                 AudioHardware* mHardware;
@@ -276,8 +294,8 @@ private:
         virtual unsigned int  getInputFramesLost() const { return 0; }
                 uint32_t    devices() { return mDevices; }
                 int         state() const { return mState; }
-        virtual status_t    addAudioEffect(effect_handle_t effect){return INVALID_OPERATION;}
-        virtual status_t    removeAudioEffect(effect_handle_t effect){return INVALID_OPERATION;}
+        virtual status_t    addAudioEffect(effect_interface_s**) { return 0;}
+        virtual status_t    removeAudioEffect(effect_interface_s**) { return 0;}
 
     private:
                 AudioHardware* mHardware;
@@ -299,19 +317,22 @@ private:
             bool        mBluetoothNrec;
             uint32_t    mBluetoothId;
             AudioStreamOutMSM72xx*  mOutput;
-            android::SortedVector<AudioStreamInMSM72xx*>   mInputs;
+            SortedVector <AudioStreamInMSM72xx*>   mInputs;
 
             msm_snd_endpoint *mSndEndpoints;
             int mNumSndEndpoints;
             int mCurSndDevice;
             int m7xsnddriverfd;
-            bool        mDualMicEnabled;
-            int         mTtyMode;
-
-            bool        mBuiltinMicSelected;
+            bool mDualMicEnabled;
+            int  mTtyMode;
+            bool mBuiltinMicSelected;
+#ifdef HAVE_FM_RADIO
+            int mFmRadioEnabled;
+            int mFmPrev;
+#endif
 
      friend class AudioStreamInMSM72xx;
-            android::Mutex       mLock;
+            Mutex       mLock;
 };
 
 // ----------------------------------------------------------------------------
