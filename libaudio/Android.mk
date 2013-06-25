@@ -5,7 +5,7 @@ LOCAL_PATH := $(call my-dir)
 
 include $(CLEAR_VARS)
 
-LOCAL_MODULE := audio_policy.$(TARGET_BOARD_PLATFORM)
+LOCAL_MODULE := audio_policy.$(TARGET_DEVICE)
 LOCAL_MODULE_PATH := $(TARGET_OUT_SHARED_LIBRARIES)/hw
 LOCAL_STATIC_LIBRARIES := libmedia_helper
 LOCAL_WHOLE_STATIC_LIBRARIES := libaudiopolicy_legacy    
@@ -26,7 +26,7 @@ include $(BUILD_SHARED_LIBRARY)
 
 include $(CLEAR_VARS)
 
-LOCAL_MODULE := audio.primary.$(TARGET_BOARD_PLATFORM)
+LOCAL_MODULE := audio.primary.$(TARGET_DEVICE)
 LOCAL_MODULE_PATH := $(TARGET_OUT_SHARED_LIBRARIES)/hw	
 LOCAL_STATIC_LIBRARIES += libmedia_helper	
 LOCAL_WHOLE_STATIC_LIBRARIES := libaudiohw_legacy
@@ -42,6 +42,10 @@ LOCAL_SHARED_LIBRARIES := \
 LOCAL_SRC_FILES += AudioHardware.cpp
 
 LOCAL_CFLAGS += -fno-short-enums
+
+ifeq ($(BOARD_HAVE_BLUETOOTH),true)
+#  LOCAL_SHARED_LIBRARIES += audio.a2dp.default
+endif
 
 include $(BUILD_SHARED_LIBRARY)
 
