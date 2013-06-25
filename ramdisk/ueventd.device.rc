@@ -66,7 +66,7 @@
 /dev/msm_preproc_ctl        0660   system      audio
 /dev/msm_a2dp_in            0640   system      audio
 /dev/msm_amrnb_in           0640   system      audio
-
+/dev/msm_snd*               0660   system      audio
 ## Bluetooth
 /dev/ttyHS0                 0666   root        system
 
