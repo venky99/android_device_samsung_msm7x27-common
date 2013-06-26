@@ -83,6 +83,7 @@
 /proc/LinuStoreIII/efs_info 0664   radio       radio
 /proc/LinuStoreIII/keystr   0664   radio       radio
 /dev/oncrpc/*               0660   root        system
+/dev/input/*                0660   system      input
 /dev/radio0                 0640   fm_radio    fm_radio
 /dev/i2c-2                  0660   root        system
 /dev/i2c-4                  0660   root        system
