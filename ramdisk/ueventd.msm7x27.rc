@@ -73,6 +73,7 @@
 
 ## Misc
 /dev/oncrpc/*                0660  root      system
+/dev/input/*                 0660  system    input
 /proc/LinuStoreIII/efs_info  0664  radio     radio
 /proc/LinuStoreIII/keystr    0664  radio     radio
 /dev/pmem_smipool*           0660  system    camera
