@@ -13,7 +13,9 @@
 # limitations under the License.
 
 ## GPS configuration
-$(call inherit-product, device/common/gps/gps_eu_supl.mk)
+#$(call inherit-product, device/common/gps/gps_eu_supl.mk)
+PRODUCT_COPY_FILES += \
+    device/samsung/msm7x27-common/prebuilt/etc/gps.conf:system/etc/gps.conf
 
 ## Media
 PRODUCT_PACKAGES += \
@@ -46,15 +48,24 @@ PRODUCT_PACKAGES += \
   
 ## Other
 PRODUCT_PACKAGES += \
+    Stk \
     make_ext4fs \
     brcm_patchram_plus \
-    bdaddr_read \
     setup_fs \
     CMFileManager  
+
+## Wifi
+PRODUCT_PACKAGES += \
+    wmiconfig \
+    wlan_tool
 
 ## Vold config
 PRODUCT_COPY_FILES += \
     device/samsung/msm7x27-common/prebuilt/etc/vold.fstab:system/etc/vold.fstab
+
+# BT config
+PRODUCT_COPY_FILES += \
+    system/bluetooth/data/main.conf:system/etc/bluetooth/main.conf
 
 ## Hardware properties 
 PRODUCT_COPY_FILES += \
@@ -120,10 +131,10 @@ PRODUCT_COPY_FILES += \
 PRODUCT_COPY_FILES += \
     device/samsung/msm7x27-common/prebuilt/usr/idc/sec_touchscreen.idc:system/usr/idc/sec_touchscreen.idc
 
-## ICS GPS blob
+## init.d
 PRODUCT_COPY_FILES += \
     device/samsung/msm7x27-common/prebuilt/lib/hw/gps.msm7x27.so:system/lib/hw/gps.msm7x27.so
 
 ## Other
 PRODUCT_LOCALES += en
-PRODUCT_AAPT_CONFIG := ldpi mdpi normal
+PRODUCT_AAPT_CONFIG := ldpi mdpi hdpi normal

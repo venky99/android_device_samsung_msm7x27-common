@@ -90,20 +90,26 @@ BOARD_GLOBAL_CFLAGS += -DHAVE_FM_RADIO -DQCOM_FM_ENABLED
 BOARD_FM_DEVICE := brcm2049
 
 ## Wi-Fi
-## Wi-Fi
+# Drivers for ifaces
 BOARD_WPA_SUPPLICANT_DRIVER := WEXT
+BOARD_HOSTAPD_DRIVER := WEXT
+# wpa_supplicant version, wifi/AP commands and drivers
 WPA_SUPPLICANT_VERSION := VER_0_6_X
 BOARD_WLAN_DEVICE := ath6kl
+# Wifi AP config
 WIFI_AP_DRIVER_MODULE_ARG := "ifname=athap0 fwmode=2"
 WIFI_AP_DRIVER_MODULE_PATH := /system/wifi/ar6000.ko
 WIFI_AP_DRIVER_MODULE_NAME := ar6000
+# Wifi config
 WIFI_DRIVER_MODULE_ARG := "ifname=wlan0 fwmode=1"
 WIFI_DRIVER_MODULE_PATH := /system/wifi/ar6000.ko
 WIFI_DRIVER_MODULE_NAME := ar6000
+# Some other stuff
 BOARD_HAVE_SAMSUNG_WIFI := true
-BOARD_WLAN_CHIP_AR6003  := true
-BOARD_WLAN_ATHEROS_SDK  := AR6kSDK.3.1/AR6kSDK.build_3.1_RC.563
-
+BOARD_WEXT_NO_COMBO_SCAN := true
+## Useless, but make them stay here
+#BOARD_WLAN_CHIP_AR6003 := true
+#BOARD_WLAN_ATHEROS_SDK := AR6kSDK.3.1/AR6kSDK.build_3.1_RC.563
 ## Wi-Fi Hotspot
 BOARD_HAVE_LEGACY_HOSTAPD := true
 BOARD_HOSTAPD_NO_ENTROPY := true
@@ -118,7 +124,7 @@ BOARD_MOBILEDATA_INTERFACE_NAME := "pdp0"
 TARGET_USE_CUSTOM_LUN_FILE_PATH := /sys/devices/platform/usb_mass_storage/lun0/file
 BOARD_UMS_LUNFILE := "/sys/devices/platform/usb_mass_storage/lun0/file"
 
-## Legacy touchscreen support
+## Support for legacy touch screen
 BOARD_USE_LEGACY_TOUCHSCREEN := true
 
 ## Bootanimation
@@ -139,15 +145,20 @@ TARGET_DISABLE_ARM_PIE := true
 ## Fix colors in panorama mode
 BOARD_CPU_COLOR_CONVERT := true
 
-## Recovery
+## Recovery/Boot infos
 BOARD_HAS_DOWNLOAD_MODE := true
 TARGET_USERIMAGES_USE_EXT4 := true
 BOARD_BOOTIMAGE_PARTITION_SIZE := 8388608
 BOARD_RECOVERYIMAGE_PARTITION_SIZE := 8388608
-BOARD_SYSTEMIMAGE_PARTITION_SIZE := 229938816
+BOARD_SYSTEMIMAGE_PARTITION_SIZE := 219938816
 BOARD_USERDATAIMAGE_PARTITION_SIZE := 190054400
 BOARD_FLASH_BLOCK_SIZE := 131072
 BOARD_KERNEL_CMDLINE := 
 BOARD_BML_BOOT := "/dev/block/bml8"
 BOARD_BML_RECOVERY := "/dev/block/bml9"
 BOARD_RECOVERY_HANDLES_MOUNT := true
+
+## Recovery stuff
+#BOARD_CUSTOM_RECOVERY_KEYMAPPING := ../../device/samsung/msm7x27-common/recovery/recovery_ui.c
+#TARGET_RECOVERY_INITRC := device/samsung/msm7x27-common/recovery/recovery.rc
+#TARGET_RECOVERY_FSTAB := device/samsung/msm7x27-common/recovery/recovery.fstab
