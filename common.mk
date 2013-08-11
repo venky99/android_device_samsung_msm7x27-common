@@ -12,7 +12,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-$(call inherit-product, device/qcom/msm7x27/msm7x27.mk)
+# Most specific first.
+$(call inherit-product, $(SRC_TARGET_DIR)/product/languages_full.mk)
 
 ## Audio
 PRODUCT_PACKAGES += \
@@ -60,10 +61,24 @@ PRODUCT_PACKAGES += \
     camera.msm7x27 \
     libcamera
 
+# FM Radio
+PRODUCT_PACKAGES += \
+    Effem \
+    libfmradio.bcm2049
+
+PRODUCT_COPY_FILES += \
+    frameworks/base/data/etc/com.stericsson.hardware.fm.receiver.xml:system/etc/permissions/com.stericsson.hardware.fm.receiver.xml
+
 ## GPS
 PRODUCT_PACKAGES += \
     gps.msm7x27 \
     librpc
+
+ifdef BUILD_WITH_30X_KERNEL
+## HW Composer
+PRODUCT_PACKAGES += \
+    hwcomposer.msm7x27
+endif
 
 ## Other
 PRODUCT_PACKAGES += \
@@ -130,8 +145,24 @@ PRODUCT_PROPERTY_OVERRIDES += \
     ro.telephony.call_ring.multiple=false \
     ro.telephony.call_ring.delay=3000
 
-# Other
-PRODUCT_LOCALES += en ru_RU
+## Ramdisk
+## SAMSUNG_BOOTLOADER is the product model changed into appropriate string parsed by init.
+## Example: -GT-I5500 becomes gt-i5500board, -GT-S5830 becomes gt-s5830board, and so on.
+SAMSUNG_BOOTLOADER := $(shell echo $(PRODUCT_VERSION_DEVICE_SPECIFIC)board | tr '[A-Z]' '[a-z]' | cut -c 2-)
+PRODUCT_COPY_FILES += \
+    device/samsung/msm7x27-common/ramdisk/init.msm7x27.rc:root/init.$(SAMSUNG_BOOTLOADER).rc \
+    device/samsung/msm7x27-common/ramdisk/init.msm7x27.bluez.rc:root/init.$(SAMSUNG_BOOTLOADER).bluez.rc \
+    device/samsung/msm7x27-common/ramdisk/init.msm7x27.parts.rc:root/init.$(SAMSUNG_BOOTLOADER).parts.rc \
+    device/samsung/msm7x27-common/ramdisk/init.msm7x27.usb.rc:root/init.$(SAMSUNG_BOOTLOADER).usb.rc \
+    device/samsung/msm7x27-common/ramdisk/ueventd.msm7x27.rc:root/ueventd.$(SAMSUNG_BOOTLOADER).rc
+
+# Inherit qcom/msm7x27
+$(call inherit-product, device/qcom/msm7x27/msm7x27.mk)
+
+# Install/Uninstall google apps
+$(call inherit-product, vendor/google/gapps_armv6_tiny.mk)
+
+# Common assets
 PRODUCT_AAPT_CONFIG := ldpi mdpi normal
 
 # Samsung msm7x27-common overlays

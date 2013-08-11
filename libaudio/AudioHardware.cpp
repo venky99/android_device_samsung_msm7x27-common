@@ -36,11 +36,12 @@
 // hardware specific functions
 
 #include "AudioHardware.h"
+#include <media/AudioSystem.h>
 //#include <media/AudioRecord.h>
 
 #define LOG_SND_RPC 0  // Set to 1 to log sound RPC's
 
-#define COMBO_DEVICE_SUPPORTED 1 // Headset speaker combo device is supported on this target
+//#define COMBO_DEVICE_SUPPORTED // Headset speaker combo device supported on this target
 #ifdef HAVE_FM_RADIO
 #define FM_ON_KEY "fm_on"
 #define FM_OFF_KEY "fm_off"
@@ -116,9 +117,10 @@ static uint32_t SND_DEVICE_FM_SPEAKER=-1;
 // ----------------------------------------------------------------------------
 
 AudioHardware::AudioHardware() :
-    mInit(false), mMicMute(true), mBluetoothNrec(true), mBluetoothId(0), mTtyMode(TTY_OFF),
+    mInit(false), mMicMute(true), mBluetoothNrec(true), mBluetoothId(0),
     mOutput(0), mSndEndpoints(NULL), mCurSndDevice(-1),
-    mDualMicEnabled(false), mBuiltinMicSelected(false)
+    mDualMicEnabled(false), mBuiltinMicSelected(false),
+    mTtyMode(TTY_OFF)
 #ifdef HAVE_FM_RADIO
     , mFmRadioEnabled(false), mFmPrev(false)
 #endif
@@ -2281,7 +2283,7 @@ status_t AudioHardware::AudioStreamInMSM72xx::setParameters(const String8& keyVa
 
 status_t AudioHardware::setFmVolume(float v)
 {
-    unsigned int VolValue = (unsigned int)(AudioSystem::logToLinear(v));
+    unsigned int VolValue = (unsigned int)(android::AudioSystem::logToLinear(v));
     int volume = (unsigned int)(VolValue*VolValue/100);
 
     char volhex[10] = "";
