@@ -26,7 +26,7 @@ on early-init
 on fs
 
     # mount file system
-    mount_all /fstab.msm7x27
+    mount_all /fstab.${ro.hardware}
 
     chown radio /dev/bml7
     chown radio /dev/bml10
