@@ -160,7 +160,7 @@ PRODUCT_COPY_FILES += \
     device/samsung/msm7x27-common/ramdisk/init.msm7x27.parts.rc:root/init.$(SAMSUNG_BOOTLOADER).parts.rc \
     device/samsung/msm7x27-common/ramdisk/init.msm7x27.usb.rc:root/init.$(SAMSUNG_BOOTLOADER).usb.rc \
     device/samsung/msm7x27-common/ramdisk/ueventd.msm7x27.rc:root/ueventd.$(SAMSUNG_BOOTLOADER).rc \
-    device/samsung/msm7x27-common/ramdisk/fstab.msm7x27:root/fstab.$(SAMSUNG_BOOTLOADER)
+    device/samsung/msm7x27-common/ramdisk/fstab.msm7x27:root/fstab.msm7x27
 
 # Inherit qcom/msm7x27
 $(call inherit-product, device/qcom/msm7x27/msm7x27.mk)
