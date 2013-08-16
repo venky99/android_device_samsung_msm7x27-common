@@ -1,6 +1,0 @@
-#!/sbin/sh
-#
-
-if [ ! -h /data/local/tmp/adreno_config.txt ]; then
-    ln -s /system/lib/egl/egl.cfg /data/local/tmp/adreno_config.txt
-fi
