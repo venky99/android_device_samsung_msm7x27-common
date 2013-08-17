@@ -25,8 +25,8 @@ app/Apollo.apk
 app/CellBroadcastReceiver.apk
 app/DeskClock.apk
 app/Development.apk
-app/Exchange2.apk
-app/Gallery2.apk
+#app/Exchange2.apk
+#app/Gallery2.apk
 app/LockClock.apk
 
 # Pico TTS Language Files (5MB)
