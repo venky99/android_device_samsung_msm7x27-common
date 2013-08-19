@@ -34,7 +34,7 @@ on fs
     chmod 0666 /dev/graphics/fb0
 
     # mount file system
-    mount_all /fstab.$(SAMSUNG_BOOTLOADER)
+    mount_all /fstab.msm7x27
 
     chown radio /dev/bml7
     chown radio /dev/bml10
