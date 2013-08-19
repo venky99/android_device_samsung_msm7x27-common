@@ -88,10 +88,6 @@ PRODUCT_PACKAGES += \
     brcm_patchram_plus \
     setup_fs
 
-## Vold config
-PRODUCT_COPY_FILES += \
-    device/samsung/msm7x27-common/prebuilt/etc/vold.fstab:system/etc/vold.fstab
-
 ## Hardware properties
 PRODUCT_COPY_FILES += \
     frameworks/native/data/etc/android.hardware.camera.xml:system/etc/permissions/android.hardware.camera.xml \
