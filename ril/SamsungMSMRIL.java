@@ -572,8 +572,7 @@ public class SamsungMSMRIL extends RIL implements CommandsInterface {
                 dc.uusInfo.setDcs(p.readInt());
                 byte[] userData = p.createByteArray();
                 dc.uusInfo.setUserData(userData);
-                Log
-                .v(LOG_TAG, String.format("Incoming UUS : type=%d, dcs=%d, length=%d",
+                Rlog.v(RILJ_LOG_TAG, String.format("Incoming UUS : type=%d, dcs=%d, length=%d",
                         dc.uusInfo.getType(), dc.uusInfo.getDcs(),
                         dc.uusInfo.getUserData().length));
                 Rlog.v(RILJ_LOG_TAG, "Incoming UUS : data (string)="
