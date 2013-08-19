@@ -124,7 +124,7 @@ public class SamsungMSMRIL extends RIL implements CommandsInterface {
         rr = findAndRemoveRequestFromList(serial);
 
         if (rr == null) {
-            Log.w(LOG_TAG, "Unexpected solicited response! sn: "
+            Rlog.w(RILJ_LOG_TAG, "Unexpected solicited response! sn: "
                     + serial + " error: " + error);
             return;
         }
@@ -256,7 +256,7 @@ public class SamsungMSMRIL extends RIL implements CommandsInterface {
             }} catch (Throwable tr) {
                 // Exceptions here usually mean invalid RIL responses
 
-                Log.w(LOG_TAG, rr.serialString() + "< "
+                Rlog.w(RILJ_LOG_TAG, rr.serialString() + "< "
                         + requestToString(rr.mRequest)
                         + " exception, possible invalid RIL response", tr);
 
@@ -293,7 +293,7 @@ public class SamsungMSMRIL extends RIL implements CommandsInterface {
                 {
                     ret = responseSMS(p);
                 } catch (Throwable tr) {
-                    Log.w(LOG_TAG, rr.serialString() + "< "
+                    Rlog.w(RILJ_LOG_TAG, rr.serialString() + "< "
                             + requestToString(rr.mRequest)
                             + " exception, Processing Samsung SMS fix ", tr);
                     rr.onError(error, ret);
@@ -349,7 +349,7 @@ public class SamsungMSMRIL extends RIL implements CommandsInterface {
     public void
     dialEmergencyCall(String address, int clirMode, Message result) {
         RILRequest rr;
-        Log.v(LOG_TAG, "Emergency dial: " + address);
+        Rlog.v(RILJ_LOG_TAG, "Emergency dial: " + address);
 
         rr = RILRequest.obtain(RIL_REQUEST_DIAL_EMERGENCY, result);
         rr.mParcel.writeString(address + "/");
@@ -488,7 +488,7 @@ public class SamsungMSMRIL extends RIL implements CommandsInterface {
             try {
                 listInfoRecs = (ArrayList<CdmaInformationRecords>)ret;
             } catch (ClassCastException e) {
-                Log.e(LOG_TAG, "Unexpected exception casting to listInfoRecs", e);
+                Rlog.e(RILJ_LOG_TAG, "Unexpected exception casting to listInfoRecs", e);
                 break;
             }
 
@@ -506,7 +506,7 @@ public class SamsungMSMRIL extends RIL implements CommandsInterface {
                 Runtime.getRuntime().exec("am " + amString);
             } catch (IOException e) {
                 e.printStackTrace();
-                Log.e(LOG_TAG, "am " + amString + " could not be executed.");
+                Rlog.e(RILJ_LOG_TAG, "am " + amString + " could not be executed.");
             }
             break;
         }
@@ -576,12 +576,12 @@ public class SamsungMSMRIL extends RIL implements CommandsInterface {
                 .v(LOG_TAG, String.format("Incoming UUS : type=%d, dcs=%d, length=%d",
                         dc.uusInfo.getType(), dc.uusInfo.getDcs(),
                         dc.uusInfo.getUserData().length));
-                Log.v(LOG_TAG, "Incoming UUS : data (string)="
+                Rlog.v(RILJ_LOG_TAG, "Incoming UUS : data (string)="
                         + new String(dc.uusInfo.getUserData()));
-                Log.v(LOG_TAG, "Incoming UUS : data (hex): "
+                Rlog.v(RILJ_LOG_TAG, "Incoming UUS : data (hex): "
                         + IccUtils.bytesToHexString(dc.uusInfo.getUserData()));
             } else {
-                Log.v(LOG_TAG, "Incoming UUS : NOT present!");
+                Rlog.v(RILJ_LOG_TAG, "Incoming UUS : NOT present!");
             }
 
             // Make sure there's a leading + on addresses with a TOA of 145
