@@ -280,6 +280,7 @@ public class SamsungMSMRIL extends RIL implements CommandsInterface {
                 }
                 break;
         }
+
         if (error != 0) {
             // Ugly fix for Samsung messing up SMS_SEND request fail in binary RIL
             if (error == -1 && rr.mRequest == RIL_REQUEST_SEND_SMS)
