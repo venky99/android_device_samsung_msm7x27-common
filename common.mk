@@ -146,6 +146,20 @@ PRODUCT_PROPERTY_OVERRIDES += \
     ro.telephony.call_ring.multiple=false \
     ro.telephony.call_ring.delay=3000
 
+## Ramdisk
+## SAMSUNG_BOOTLOADER is the product model changed into appropriate string parsed by init.
+## Example: -GT-I5500 becomes gt-i5500board, -GT-S5830 becomes gt-s5830board, and so on.
+SAMSUNG_BOOTLOADER := $(shell echo $(PRODUCT_VERSION_DEVICE_SPECIFIC)board | tr '[A-Z]' '[a-z]' | cut -c 2-)
+
+PRODUCT_PACKAGES += \
+    fstab.$(SAMSUNG_BOOTLOADER) \
+    charging.rle \
+    init.$(SAMSUNG_BOOTLOADER).rc \
+    init.$(SAMSUNG_BOOTLOADER).bluez.rc \
+    init.$(SAMSUNG_BOOTLOADER).parts.rc \
+    init.$(SAMSUNG_BOOTLOADER).usb.rc \
+    ueventd.$(SAMSUNG_BOOTLOADER).rc
+
 # Inherit qcom/msm7x27
 $(call inherit-product, device/qcom/msm7x27/msm7x27.mk)
 

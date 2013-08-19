@@ -1,11 +1,6 @@
 LOCAL_PATH:= $(call my-dir)
 include $(CLEAR_VARS)
 
-## Ramdisk
-## SAMSUNG_BOOTLOADER is the product model changed into appropriate string parsed by init.
-## Example: -GT-I5500 becomes gt-i5500board, -GT-S5830 becomes gt-s5830board, and so on.
-SAMSUNG_BOOTLOADER := $(shell echo $(PRODUCT_VERSION_DEVICE_SPECIFIC)board | tr '[A-Z]' '[a-z]' | cut -c 2-)
-
 include $(CLEAR_VARS)
 LOCAL_MODULE       := fstab.$(SAMSUNG_BOOTLOADER)
 LOCAL_MODULE_TAGS  := optional eng
