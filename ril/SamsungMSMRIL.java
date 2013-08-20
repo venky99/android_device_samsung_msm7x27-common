@@ -33,6 +33,13 @@ import com.android.internal.telephony.cdma.SignalToneUtil;
 import android.telephony.Rlog;
 
 public class SamsungMSMRIL extends RIL implements CommandsInterface {
+        // When SIM is PIN-unlocked, the RIL responds with APPSTATE_UNKNOWN and
+        // does not follow up with RIL_UNSOL_RESPONSE_SIM_STATUS_CHANGED. We
+        // notify the system here.
+        String state = SystemProperties.get(TelephonyProperties.PROPERTY_SIM_STATE);
+        if (!"READY".equals(state) && mIccStatusChangedRegistrants != null && !mIsSamsungCdma) {
+            mIccStatusChangedRegistrants.notifyRegistrants();
+        }
 
     private boolean mSignalbarCount = SystemProperties.getInt("ro.telephony.sends_barcount", 0) == 1 ? true : false;
     private boolean mIsSamsungCdma = SystemProperties.getBoolean("ro.ril.samsung_cdma", false);
@@ -44,50 +51,45 @@ public class SamsungMSMRIL extends RIL implements CommandsInterface {
     @Override
     protected Object
     responseSignalStrength(Parcel p) {
-        // When SIM is PIN-unlocked, the RIL responds with APPSTATE_UNKNOWN and
-        // does not follow up with RIL_UNSOL_RESPONSE_SIM_STATUS_CHANGED. We
-        // notify the system here.
-        String state = SystemProperties.get(TelephonyProperties.PROPERTY_SIM_STATE);
-        if (!"READY".equals(state) && mIccStatusChangedRegistrants != null && !mIsSamsungCdma) {
-            mIccStatusChangedRegistrants.notifyRegistrants();
-        }
-
         int numInts = 12;
         int response[];
 
-        int[] response = new int[7];
+        /* TODO: Add SignalStrength class to match RIL_SignalStrength */
+        response = new int[numInts];
         for (int i = 0 ; i < 7 ; i++) {
             response[i] = p.readInt();
         }
+        // CooperRIL is a v3 RIL, fill the rest with -1
+        for (int i = 7; i < numInts; i++) {
+            response[i] = -1;
+        }
 
-        if (mIsSamsungCdma){
-            if(response[3] < 0){
-               response[3] = -response[3];
-            }
+        if (mIsSamsungCdma)
             // Framework takes care of the rest for us.
-        }
-        else {
-            /* Matching Samsung signal strength to asu.
-               Method taken from Samsungs cdma/gsmSignalStateTracker */
-            if(mSignalbarCount)
-            {
-                // Samsung sends the count of bars that should be displayed instead of
-                // a real signal strength
-                response[0] = ((response[0] & 0xFF00) >> 8) * 3; // gsmDbm
-            } else {
-                response[0] = response[0] & 0xFF; // gsmDbm
-            }
-            response[1] = -1; // gsmEcio
-            response[2] = (response[2] < 0)?-120:-response[2]; // cdmaDbm
-            response[3] = (response[3] < 0)?-160:-response[3]; // cdmaEcio
-            response[4] = (response[4] < 0)?-120:-response[4]; // evdoRssi
-            response[5] = (response[5] < 0)?-1:-response[5]; // evdoEcio
-            if(response[6] < 0 || response[6] > 8)
-                response[6] = -1;
-        }
+            return response;
 
-        SignalStrength signalStrength = new SignalStrength(
-            response[0], response[1], response[2], response[3], response[4],
-            response[5], response[6], !mIsSamsungCdma);
+        /* Matching Samsung signal strength to asu.
+		   Method taken from Samsungs cdma/gsmSignalStateTracker */
+        if(mSignalbarCount)
+        {
+            //Samsung sends the count of bars that should be displayed instead of
+            //a real signal strength
+            response[0] = ((response[0] & 0xFF00) >> 8) * 3; //gsmDbm
+        } else {
+            response[0] = response[0] & 0xFF; //gsmDbm
+        }
+        response[1] = -1; //gsmEcio
+        response[2] = (response[2] < 0)?-120:-response[2]; //cdmaDbm
+        response[3] = (response[3] < 0)?-160:-response[3]; //cdmaEcio
+        response[4] = (response[4] < 0)?-120:-response[4]; //evdoRssi
+        response[5] = (response[5] < 0)?-1:-response[5]; //evdoEcio
+        if(response[6] < 0 || response[6] > 8)
+            response[6] = -1;
+
+	SignalStrength signalStrength = new SignalStrength(
+	            response[0], response[1], response[2], response[3], response[4],
+	            response[5], response[6], !mIsSamsungCdma);
         return signalStrength;
     }
+}
+
