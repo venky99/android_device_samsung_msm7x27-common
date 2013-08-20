@@ -16,6 +16,7 @@ LOCAL_C_INCLUDES       += hardware/qcom/display/libgralloc
 
 LOCAL_SHARED_LIBRARIES := liblog libutils libcutils
 LOCAL_SHARED_LIBRARIES += libui libhardware libcamera_client
+LOCAL_SHARED_LIBRARIES += libcamera libseccameraadaptor
 
 LOCAL_LDFLAGS         += -Lvendor/samsung/gio/proprietary/lib -lcamera
 
