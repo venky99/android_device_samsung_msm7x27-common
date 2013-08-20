@@ -33,13 +33,6 @@ import com.android.internal.telephony.cdma.SignalToneUtil;
 import android.telephony.Rlog;
 
 public class SamsungMSMRIL extends RIL implements CommandsInterface {
-        // When SIM is PIN-unlocked, the RIL responds with APPSTATE_UNKNOWN and
-        // does not follow up with RIL_UNSOL_RESPONSE_SIM_STATUS_CHANGED. We
-        // notify the system here.
-        String state = SystemProperties.get(TelephonyProperties.PROPERTY_SIM_STATE);
-        if (!"READY".equals(state) && mIccStatusChangedRegistrants != null && !mIsSamsungCdma) {
-            mIccStatusChangedRegistrants.notifyRegistrants();
-        }
 
     private boolean mSignalbarCount = SystemProperties.getInt("ro.telephony.sends_barcount", 0) == 1 ? true : false;
     private boolean mIsSamsungCdma = SystemProperties.getBoolean("ro.ril.samsung_cdma", false);
@@ -51,6 +44,13 @@ public class SamsungMSMRIL extends RIL implements CommandsInterface {
     @Override
     protected Object
     responseSignalStrength(Parcel p) {
+        // When SIM is PIN-unlocked, the RIL responds with APPSTATE_UNKNOWN and
+        // does not follow up with RIL_UNSOL_RESPONSE_SIM_STATUS_CHANGED. We
+        // notify the system here.
+        String state = SystemProperties.get(TelephonyProperties.PROPERTY_SIM_STATE);
+        if (!"READY".equals(state) && mIccStatusChangedRegistrants != null && !mIsSamsungCdma) {
+            mIccStatusChangedRegistrants.notifyRegistrants();
+
         int numInts = 12;
         int response[];
 
