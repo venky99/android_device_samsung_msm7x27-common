@@ -50,6 +50,7 @@ public class SamsungMSMRIL extends RIL implements CommandsInterface {
         String state = SystemProperties.get(TelephonyProperties.PROPERTY_SIM_STATE);
         if (!"READY".equals(state) && mIccStatusChangedRegistrants != null && !mIsSamsungCdma) {
             mIccStatusChangedRegistrants.notifyRegistrants();
+	}
 
         int numInts = 12;
         int response[];
