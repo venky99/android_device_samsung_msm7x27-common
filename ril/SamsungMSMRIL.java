@@ -14,6 +14,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.os.AsyncResult;
 import android.os.Parcel;
+import android.text.TextUtils;
 import android.os.SystemProperties;
 import android.telephony.PhoneNumberUtils;
 import android.telephony.SignalStrength;
