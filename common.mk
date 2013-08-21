@@ -88,6 +88,10 @@ PRODUCT_PACKAGES += \
     brcm_patchram_plus \
     setup_fs
 
+## Vold config
+PRODUCT_COPY_FILES += \
+    device/samsung/msm7x27-common/prebuilt/etc/vold.fstab:system/etc/vold.fstab
+
 ## Hardware properties
 PRODUCT_COPY_FILES += \
     frameworks/native/data/etc/android.hardware.camera.xml:system/etc/permissions/android.hardware.camera.xml \
@@ -148,7 +152,7 @@ PRODUCT_PROPERTY_OVERRIDES += \
 SAMSUNG_BOOTLOADER := $(shell echo $(PRODUCT_VERSION_DEVICE_SPECIFIC)board | tr '[A-Z]' '[a-z]' | cut -c 2-)
 
 PRODUCT_PACKAGES += \
-    fstab.msm7x27 \
+    fstab.$(SAMSUNG_BOOTLOADER) \
     charging.rle \
     init.$(SAMSUNG_BOOTLOADER).rc \
     init.$(SAMSUNG_BOOTLOADER).bluez.rc \
