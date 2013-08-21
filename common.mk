@@ -148,7 +148,7 @@ PRODUCT_PROPERTY_OVERRIDES += \
 SAMSUNG_BOOTLOADER := $(shell echo $(PRODUCT_VERSION_DEVICE_SPECIFIC)board | tr '[A-Z]' '[a-z]' | cut -c 2-)
 
 PRODUCT_PACKAGES += \
-    fstab.$(SAMSUNG_BOOTLOADER) \
+    fstab.msm7x27 \
     charging.rle \
     init.$(SAMSUNG_BOOTLOADER).rc \
     init.$(SAMSUNG_BOOTLOADER).bluez.rc \

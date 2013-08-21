@@ -33,6 +33,9 @@ on fs
     # framebuffer permission for copybit
     chmod 0666 /dev/graphics/fb0
 
+    # mount file system
+    mount_all /fstab.msm7x27
+
     chown radio /dev/bml7
     chown radio /dev/bml10
     chown radio /dev/bml11
