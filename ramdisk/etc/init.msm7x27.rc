@@ -9,18 +9,24 @@ on init
 
 on early-init
 
-    export EXTERNAL_STORAGE /storage/sdcard0
-
-    ## Setup storage
+    # create dirs
+    mkdir /system
+    mkdir /data 0771 system system
+    mkdir /cache 0771 system cache
+    mkdir /sd-ext 0771 system system
+    # sdcard
     mkdir /storage 0775 system sdcard_r
-    mkdir /storage/sdcard0 0775 system system
-    mkdir /storage/usbdisk0 0775 system system
-
-    ## Backwards compability
+    mkdir /storage/sdcard0 0755 system system
+    mkdir /storage/usbdisk0 0000 system system
     symlink /storage/sdcard0 /mnt/sdcard
     symlink /storage/sdcard0 /sdcard
     symlink /storage/usbdisk0 /mnt/usbdisk
     symlink /storage/usbdisk0 /usbdisk
+    export EXTERNAL_STORAGE /storage/sdcard0
+
+    # sd-ext
+    mkdir /sd-ext 0771 system system
+    export SD_EXT_DIRECTORY /sd-ext
 
 on fs
 
@@ -102,9 +108,6 @@ on boot
     chown gps system /data/gps
 
 on post-fs-data
-
-    ## For phone / Data
-    chmod 0644 /proc/cmdline
 
     # wireless
     mkdir /data/misc/wifi/sockets 0770 wifi wifi
