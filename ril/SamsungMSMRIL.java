@@ -79,7 +79,7 @@ public class SamsungMSMRIL extends RIL implements CommandsInterface {
         if(response[6] < 0 || response[6] > 8)
             response[6] = -1;
 
-	SignalStrength signalStrength = SignalStrength.makeSignalStrengthFromRilParcel(
+	SignalStrength signalStrength = new SignalStrength(
 	            response[0], response[1], response[2], response[3], response[4],
 	            response[5], response[6], !mIsSamsungCdma);
         return signalStrength;
