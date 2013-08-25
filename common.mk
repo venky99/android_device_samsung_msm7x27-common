@@ -53,8 +53,7 @@ PRODUCT_PROPERTY_OVERRIDES += \
     ro.qualcomm.bluetooth.nap=true \
     ro.qualcomm.bluetooth.opp=true \
     ro.qualcomm.bluetooth.pbap=true \
-    ro.qualcomm.bluetooth.sap=true \
-    debug.gr.numframebuffers=3
+    ro.qualcomm.bluetooth.sap=true
 
 ## Camera
 PRODUCT_PACKAGES += \
