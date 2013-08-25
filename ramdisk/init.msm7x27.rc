@@ -58,11 +58,6 @@ on boot
     chown system system /sys/block/mmcblk0/queue/scheduler
     chmod 0664 /sys/block/mmcblk0/queue/scheduler
 
-# nonsense
-    write /sys/class/graphics/fb0/vsync_event 1
-    chown system graphics /sys/class/graphics/fb0/vsync_event
-    chmod 0666 /sys/class/graphics/fb0/vsync_event
-
 # Setup bluetooth
     setprop ro.bt.bdaddr_path "/data/.nvmac_bt.info"
     chown bluetooth net_bt_stack /sys/module/bluetooth_power/parameters/power
