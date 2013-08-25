@@ -74,10 +74,6 @@ PRODUCT_PACKAGES += \
     gps.msm7x27 \
     librpc
 
-## HW Composer
-PRODUCT_PACKAGES += \
-    hwcomposer.msm7x27
-
 ## Other
 PRODUCT_PACKAGES += \
     lights.msm7x27 \
